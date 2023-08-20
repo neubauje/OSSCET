@@ -61,6 +61,50 @@ if ($conn->connect_error) {
 					$_SESSION['last_name'] = $last_name;
 					$_SESSION['role_id'] = $role_id;
 					echo 'Welcome, ' . $_SESSION['name'] . '!';
+
+					if(($_SESSION['role_id'] == 1) or ($_SESSION['role_id'] == 2)){
+						if ($student = $conn->prepare('SELECT email, phone, dob, ssn, bank_account_number, bank_routing_number, admission_date, graduation_date, mailing_address, cumulative_gpa FROM students WHERE user_id = ?')){
+							$student->bind_param('i', $user_id);
+							$student->execute();
+							$student->store_result();
+							if ($student->num_rows > 0){
+								$student->bind_result($email, $phone, $dob, $ssn, $bank_account_number, $bank_routing_number, $admission_date, $graduation_date, $mailing_address, $cumulative_gpa);
+								$student->fetch();
+								$_SESSION['email'] = $email;
+								$_SESSION['phone'] = $phone;
+								$_SESSION['dob'] = $dob;
+								$_SESSION['ssn'] = $ssn;
+								$_SESSION['bank_account_number'] = $bank_account_number;
+								$_SESSION['bank_routing_number'] = $bank_routing_number;
+								$_SESSION['admission_date'] = $admission_date;
+								$_SESSION['graduation_date'] = $graduation_date;
+								$_SESSION['mailing_address'] = $mailing_address;
+								$_SESSION['cumulative_gpa'] = $cumulative_gpa;
+							}
+						};
+					}
+
+					if(($_SESSION['role_id'] == 4) or ($_SESSION['role_id'] == 5) or ($_SESSION['role_id'] == 6)){
+						if ($teacher = $conn->prepare('SELECT email, phone, prefix, ssn, bank_account_number, bank_routing_number, hire_date, mailing_address, salary FROM teachers WHERE user_id = ?')){
+							$teacher->bind_param('i', $user_id);
+							$teacher->execute();
+							$teacher->store_result();
+							if ($teacher->num_rows > 0){
+								$teacher->bind_result($email, $phone, $prefix, $ssn, $bank_account_number, $bank_routing_number, $hire_date, $mailing_address, $salary);
+								$teacher->fetch();
+								$_SESSION['email'] = $email;
+								$_SESSION['phone'] = $phone;
+								$_SESSION['prefix'] = $prefix;
+								$_SESSION['ssn'] = $ssn;
+								$_SESSION['bank_account_number'] = $bank_account_number;
+								$_SESSION['bank_routing_number'] = $bank_routing_number;
+								$_SESSION['hire_date'] = $hire_date;
+								$_SESSION['mailing_address'] = $mailing_address;
+								$_SESSION['salary'] = $salary;
+							}
+						};
+					}
+
 				} else {
 					// Incorrect password
 					echo "Incorrect credentials! (Password does not match.)";
@@ -126,13 +170,13 @@ mysqli_close($conn);
 
 		if ($stmt = $conn->prepare('SELECT * FROM students WHERE user_id = ?')) {
 			// Bind parameters (s = string, i = int, b = blob, etc), in our case the username is a string so we use "s"
-			$stmt->bind_param('i', $_POST['user_id']);
+			$stmt->bind_param('i', $_SESSION['user_id']);
 			$stmt->execute();
 			// Store the result so we can check if the account exists in the database.
 			$stmt->store_result();
 		
 			if ($stmt->num_rows > 0) {
-				$sql_query = "UPDATE `students` SET (`student_id` = '$username',
+				$sql_query = "UPDATE students SET `student_id` = '$username',
 				`role_id` = $role_id, 
 				`email` = '$email', 
 				`phone` = '$phone', 
@@ -142,13 +186,13 @@ mysqli_close($conn);
 				`ssn` = '$ssn', 
 				`bank_account_number` = '$bank_account_number', 
 				`bank_routing_number` = '$bank_routing_number', 
-				`mailing_address` = '$mailing_address')
+				`mailing_address` = '$mailing_address'
 		 WHERE `user_id` = $user_id";
 			}
 
 		 else{
 		
-		 $sql_query = "INSERT INTO `students` (`user_id`, 
+		 $sql_query = "INSERT INTO students (`user_id`, 
 		 `student_id`, 
 		 `password`,
 		 `role_id`, 
@@ -208,7 +252,7 @@ if(isset($_POST['update_teacher'])){
 		 $role_id = $_SESSION['role_id'];
 		 $email = $_POST['email'];
 		 $phone = $_POST['phone'];
-		 $title = $_POST['title'];
+		 $prefix = $_POST['prefix'];
 		 $first_name = $_POST['first_name'];
 		 $last_name = $_POST['last_name'];
 		 $ssn = $_POST['ssn'];
@@ -230,7 +274,7 @@ if(isset($_POST['update_teacher'])){
 				`role_id` = $role_id, 
 				`email` = '$email', 
 				`phone` = '$phone', 
-				`title` = '$title',
+				`prefix` = '$prefix',
 				`first_name` = '$first_name', 
 				`last_name` = '$last_name', 
 				`ssn` = '$ssn', 
@@ -243,13 +287,13 @@ if(isset($_POST['update_teacher'])){
 
 		 else{
 		
-		 $sql_query = "INSERT INTO `teachers` (`user_id`, 
+		 $sql_query = "INSERT INTO teachers (`user_id`, 
 		 `teacher_id`, 
 		 `password`,
 		 `role_id`, 
 		 `email`, 
 		 `phone`, 
-		 `title`,
+		 `prefix`,
 		 `first_name`, 
 		 `last_name`, 
 		 `ssn`, 
@@ -263,7 +307,7 @@ if(isset($_POST['update_teacher'])){
 		 $role_id, 
 		 '$email',
 		 '$phone',
-		 '$title',
+		 '$prefix',
 		 '$first_name', 
 		 '$last_name',
 		 '$ssn', 
@@ -281,7 +325,7 @@ if(isset($_POST['update_teacher'])){
 			$_SESSION['username'] = $username;
 			$_SESSION['email'] = $email;
 			$_SESSION['phone'] = $phone;
-			$_SESSION['title'] = $title;
+			$_SESSION['prefix'] = $prefix;
 			$_SESSION['first_name'] = $first_name;
 			$_SESSION['last_name'] = $last_name;
 			$_SESSION['ssn'] = $ssn;

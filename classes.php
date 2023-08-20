@@ -4,7 +4,7 @@ error_reporting(E_ALL ^ E_NOTICE)
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Profile Page</title>
+<title>Classes</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.1/css/bootstrap.min.css">
@@ -16,33 +16,28 @@ error_reporting(E_ALL ^ E_NOTICE)
 <?php include 'master.php';?>
 
 <div class="container text-center">
-<h1>Welcome to the Profile page</h1>
+<h1>Welcome to the Class offerings and enrollment page!</h1>
 </div>
 <?php
 
 if($_SESSION['role_id'] == 3){
-    echo "You are a new applicant.";
-require_once 'applicant.php';
+    echo "You are a new applicant. Please go to <li><a href='profile.php'><span class='glyphicon glyphicon-briefcase'></span>Profile</a></li> in order to select a role before viewing class offerings.";
 }
 if($_SESSION['role_id'] == 1){
-    echo "You are a student.";
-    require_once 'profile_student.php';
+    require_once 'classes_student.php';
 }
 if($_SESSION['role_id'] == 2){
-    echo "You are a grad student.";
-    require_once 'profile_student.php';
+    require_once 'classes_student.php';
 }
 if($_SESSION['role_id'] == 4){
-    echo "You are a professor.";
-    require_once 'profile_teacher.php';
+    require_once 'classes_teacher.php';
 }
 if($_SESSION['role_id'] == 5){
-    echo "You are an instructor.";
-    require_once 'profile_teacher.php';
+    require_once 'classes_teacher.php';
 }
 if($_SESSION['role_id'] == 6){
-    echo "You are a teacher's aide.";
-    require_once 'profile_teacher.php';
+    require_once 'classes_student.php';
+    // teacher's aides will "enroll" in a class in the same way that a student would, since their information will not be listed on the class offering. But their role_id will allow them to not count against the occupancy/vacancy totals for the class.
 }
 
 ?>

@@ -1,0 +1,10 @@
+Secure forms against SQL injection, and hopefully make them allowed to have ' in the text fields
+The track selection drop-down for creating a course isn't recording anything but a 0
+when not pre-loaded, build a course-selecting dropdown for the class offerings creator form
+after logging in, display the logged in header instead of the logged out header, or automatically redirect to index
+
+
+    Create the register for classes.
+    List classes you are registered for.
+    Add more courses to your semester.
+    Delete classes from your schedule.

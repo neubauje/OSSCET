@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 15, 2023 at 02:04 AM
+-- Generation Time: Aug 20, 2023 at 06:13 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -29,13 +29,29 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `courses` (
   `course_id` varchar(10) NOT NULL,
-  `title` varchar(45) NOT NULL,
-  `description` varchar(500) DEFAULT NULL,
+  `course_name` varchar(100) NOT NULL,
+  `summary` varchar(1000) DEFAULT NULL,
   `credits` int(11) NOT NULL,
   `track_id` int(11) NOT NULL,
   `prerequesites` tinyint(1) DEFAULT NULL,
   `default_max_capacity` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `courses`
+--
+
+INSERT INTO `courses` (`course_id`, `course_name`, `summary`, `credits`, `track_id`, `prerequesites`, `default_max_capacity`) VALUES
+('ACCT 200', 'Introduction to Financial Accounting', 'Concepts involved in accounting for assets, liabilities, and owners equity; financial statements.', 3, 16, NULL, 30),
+('ACCT 210', 'Introduction to Managerial Accounting', 'Concepts involved in uses of accounting data in the managerial process.', 3, 16, NULL, 30),
+('ACCT 250', 'Survey of Accounting', 'This course provides a basic introduction to both financial and managerial accounting topics. It concentrates on concepts and relationships involved in preparing and analyzing financial statements and some basic decision making for internal financial managers. This course is for non-BSBA students ONLY. This course will not meet the Eller College of Management requirements for professional admission.', 3, 16, NULL, 50),
+('ACCT 310', 'Cost and Managerial Accounting', 'Concepts and analytical procedures necessary in the generation of accounting data for management planning control.', 3, 16, NULL, 30),
+('COMP 100', 'Computer Science for Testing', 'I have not yet figured out why the capacity reset to 0, but perhaps this will fix the track capture.', 3, 3, NULL, 25),
+('EXMP 101', 'Testing the Creation of Courses', 'This is my second attempt to create a course.', 1, 0, NULL, NULL),
+('EXMP 103', 'Adding Capacities', 'Now I am adding the capacity and track, but still need to figure out how to accept escape characters such as an apostrophe.', 1, 0, NULL, NULL),
+('EXMP 104', 'Once More, with Feeling!', 'I forgot to add the post variables. Trying again.', 2, 0, NULL, 50),
+('HIST 207', 'Games and Play in Medieval and Early Modern Europe', 'Games provide entertainment and recreation, but they also reflect, influence, and supply metaphors for many other aspects of life. We will explore the importance of games in shaping medieval and early modern societies by focusing on four games that have come to symbolize the era - chess, jousting, hunting, and dice games. Through our examination of these and other games, we will explore the social, political, religious, economic, legal, military, and intellectual history of medieval and early modern Europe.', 3, 9, 0, NULL),
+('OSCM 373', 'Basic Operations Management', 'This course is an introduction to the concepts, principles, problems, and practices of operations management. Operations Management is one of the key functional areas in any organization or company that deals with the production of goods and services. This course is concerned with the tasks, issues and decisions of those operations managers who have made the services and products on which we all depend. Emphasis is on managerial processes for effective operations in both goods-producing and service- rendering organization. Topics include operations strategy, process design, capacity planning, facilities location and design, forecasting, production scheduling, inventory control, quality assurance, and project management. The topics are integrated using a systems model of the operations of an organization. ', 3, 16, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -64,8 +80,7 @@ CREATE TABLE `offerings` (
   `room_id` varchar(10) NOT NULL,
   `occupancy` int(11) DEFAULT NULL,
   `vacancies` int(11) DEFAULT NULL,
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL,
+  `semester_name` varchar(50) NOT NULL,
   `start_time` time NOT NULL,
   `end_time` time NOT NULL,
   `monday` tinyint(1) DEFAULT NULL,
@@ -76,6 +91,15 @@ CREATE TABLE `offerings` (
   `saturday` tinyint(1) DEFAULT NULL,
   `sunday` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `offerings`
+--
+
+INSERT INTO `offerings` (`class_id`, `course_id`, `teacher_id`, `room_id`, `occupancy`, `vacancies`, `semester_name`, `start_time`, `end_time`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`) VALUES
+(1, 'ACCT 200', 'Kashiru', '76-232', 24, 24, 'Fall 2023', '10:00:00', '11:00:00', 1, 0, 1, 0, 1, 0, 0),
+(2, 'ACCT 210', 'Kashiru', '56-104', 30, 30, 'Spring 2024', '12:00:00', '13:00:00', 0, 1, 1, 1, 0, 0, 0),
+(3, 'ACCT 250', 'Kashiru', '113-204', 50, 50, 'Winter 2023', '09:00:00', '10:00:00', 0, 0, 1, 1, 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -113,11 +137,54 @@ INSERT INTO `roles` (`role_id`, `role_name`) VALUES
 CREATE TABLE `rooms` (
   `room_id` varchar(10) NOT NULL,
   `room_name` varchar(45) NOT NULL,
-  `building_name` varchar(45) DEFAULT NULL,
+  `building_name` varchar(200) DEFAULT NULL,
   `capacity` int(11) NOT NULL,
   `ada_accessible` tinyint(1) DEFAULT NULL,
-  `address` varchar(200) DEFAULT NULL
+  `building_address` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `rooms`
+--
+
+INSERT INTO `rooms` (`room_id`, `room_name`, `building_name`, `capacity`, `ada_accessible`, `building_address`) VALUES
+('103-108', '0108 Lecture Hall', 'John P. Schaefer Center For Creative Photogragraphy', 224, 1, '1030 N Olive Rd'),
+('11-1M', '0001M Class Laboratory', 'John W. Harshbarger Building', 16, 0, '1133 E James E. Rogers Way'),
+('11-1N', '0001N Class Laboratory', 'John W. Harshbarger Building', 6, 0, '1133 E James E. Rogers Way'),
+('11-206', '0206 Classroom', 'John W. Harshbarger Building', 50, 1, '1133 E James E. Rogers Way'),
+('113-204', '0204 Lecture Hall', 'Henry Koffler Building', 300, 1, '1340 E University Blvd'),
+('113-209', '0209 Classroom', 'Henry Koffler Building', 36, 1, '1340 E University Blvd'),
+('4-146', '0146 Classroom', 'Fred Fox School of Music', 142, 1, '1017 N Olive Rd'),
+('56-104', '0104 Classroom', 'Bear Down Building', 999, 0, '1428 E University Blvd'),
+('73-319', '0319 Computer Instructional', 'Computer Center', 28, 1, '1077 N Highland Ave'),
+('76-232', '0232 Seminar', 'Richard A. Harvill Building', 24, 1, '1103 E 2 St'),
+('78-415', '0415 Class Laboratory', 'McClelland Park', 22, 1, '650 N Park Ave'),
+('81-201', '0201 Lecture Hall', 'Physics-Atmospheric Sciences', 379, 1, '1118 E 4 St'),
+('88-301', '0301 Collaborative Classroom', 'Biological Sciences West', 112, 0, '1041 E Lowell St'),
+('94-408', '0408 Lecture Hall', 'Meinel Optical Sciences', 77, 0, '1630 E University Blvd');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `semesters`
+--
+
+CREATE TABLE `semesters` (
+  `semester_name` varchar(50) NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `semesters`
+--
+
+INSERT INTO `semesters` (`semester_name`, `start_date`, `end_date`) VALUES
+('Fall 2023', '2023-08-21', '2023-12-15'),
+('Fall 2024', '2024-08-26', '2024-12-20'),
+('Spring 2024', '2024-01-10', '2024-05-10'),
+('Summer 2024', '2024-05-13', '2024-08-07'),
+('Winter 2023', '2023-12-18', '2024-01-10');
 
 -- --------------------------------------------------------
 
@@ -149,8 +216,8 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`user_id`, `student_id`, `password`, `role_id`, `email`, `phone`, `first_name`, `last_name`, `dob`, `ssn`, `bank_account_number`, `bank_routing_number`, `admission_date`, `graduation_date`, `mailing_address`, `cumulative_gpa`) VALUES
-(8, 'movesLikeJagger', 'MickeyMouse', 2, 'mj@uagc.edu', '(111)222-3333', 'Mick', 'Jagger', '1943-07-26', '111-22-3333', 123456789, 102030405, '2023-08-14', NULL, '123 Main St, UAGC, AZ, 12345', NULL),
-(1, 'neubauje', 'password', 1, 'neubauje@gmail.com', '(111)222-3333', 'Jesse', 'Neubauer', '1990-06-29', '111-22-3333', 123456789, 102030405, '2023-08-13', NULL, '123 Main St, UAGC, AZ, 12345', NULL);
+(8, 'movesLikeJagger', 'MickeyMouse', 2, 'mj@uagc.edu', '(111)222-3333', 'Mick', 'Jagger', '1943-07-26', '111-22-3333', 123456789, 102030405, '2023-08-14', NULL, 'Abbey Road. Look it up.', NULL),
+(1, 'neubauje', 'password', 1, 'neubauje@gmail.com', '740-407-8022', 'Jesse', 'Neubauer', '1990-06-29', '111-22-3333', 123456789, 102030405, '2023-08-13', NULL, '123 Main St, UAGC, AZ, 12345', NULL);
 
 -- --------------------------------------------------------
 
@@ -168,18 +235,30 @@ CREATE TABLE `subject_tracks` (
 --
 
 INSERT INTO `subject_tracks` (`track_id`, `track_name`) VALUES
+(0, 'None'),
 (1, 'Elective'),
-(2, 'Social science'),
-(3, 'Physics'),
-(4, 'Law'),
+(2, 'Social & Behavioral Science'),
+(3, 'Engineering & Technology'),
+(4, 'Law, Policy & Social Justice'),
 (5, 'Music'),
-(6, 'Language'),
-(7, 'Biology'),
-(8, 'Math'),
+(6, 'Culture & Language'),
+(7, 'Biological & Biomedical Science'),
+(8, 'Mathematics, Statistic & Data Science'),
 (9, 'History'),
-(10, 'Literature'),
-(11, 'Education'),
-(12, 'Art');
+(10, 'English & Literature'),
+(11, 'Education & Human Development'),
+(12, 'Arts & Media'),
+(13, 'Agricultural Science'),
+(14, 'Animal & Veterinary Science'),
+(15, 'Architecture, Planning, & Development'),
+(16, 'Business, Economics & Entrepreneurship'),
+(17, 'Communication, Journalism, & Public Relations'),
+(18, 'Health, Nutrition, & Fitness'),
+(19, 'Environment & Sustainability'),
+(20, 'Computer & Information Science'),
+(21, 'Psychology & Human Behavior'),
+(22, 'Physical & Space Sciences'),
+(23, 'Philosophy & Religious Studies');
 
 -- --------------------------------------------------------
 
@@ -194,7 +273,7 @@ CREATE TABLE `teachers` (
   `role_id` int(11) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   `phone` varchar(45) DEFAULT NULL,
-  `title` varchar(5) DEFAULT NULL,
+  `prefix` varchar(5) DEFAULT NULL,
   `first_name` varchar(45) NOT NULL,
   `last_name` varchar(45) NOT NULL,
   `ssn` varchar(20) DEFAULT NULL,
@@ -210,11 +289,11 @@ CREATE TABLE `teachers` (
 -- Dumping data for table `teachers`
 --
 
-INSERT INTO `teachers` (`user_id`, `teacher_id`, `password`, `role_id`, `email`, `phone`, `title`, `first_name`, `last_name`, `ssn`, `bank_account_number`, `bank_routing_number`, `hire_date`, `mailing_address`, `salary`, `bio_summary`) VALUES
+INSERT INTO `teachers` (`user_id`, `teacher_id`, `password`, `role_id`, `email`, `phone`, `prefix`, `first_name`, `last_name`, `ssn`, `bank_account_number`, `bank_routing_number`, `hire_date`, `mailing_address`, `salary`, `bio_summary`) VALUES
 (2, 'autumnhound', 'password1', 6, 'student@uagc.edu', '(111)222-3333', 'Ms.', 'Heather', 'Powers', '111-22-3333', 123456789, 102030405, '2023-08-14', '1401 University of AZ  Tucson, AZ  85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.'),
 (4, 'Trickster', 'Nope', 2, 'trixie@uagc.edu', '(111)222-3333', 'Mx.', 'Anna', 'Phinneagar', '111-22-3333', 123456789, 102030405, '2023-08-13', '1401 University of AZ  Tucson, AZ  85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.'),
 (5, 'Pandez', 'IFC2023', 5, 'pandez@uagc.edu', '(111)222-3333', 'Mr.', 'Paul', 'Crozier', '111-22-3334', 123456789, 102030405, '2023-08-14', '1401 University of AZ  Tucson, AZ  85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.'),
-(6, 'Kashiru', 'Money', 4, 'Kashi@uagc.edu', '(111)222-3333', 'Mx.', 'Steven', 'Monteith', '111-22-3333', 123456789, 102030405, '2023-08-13', '1401 University of AZ  Tucson, AZ  85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.'),
+(6, 'Kashiru', 'Money', 4, 'Kashi@uagc.edu', '(111)222-3333', 'Mr.', 'Steven', 'Monteith', '111-22-3333', 123456789, 102030405, '2023-08-13', '1401 University of AZ  Tucson, AZ  85719', NULL, 'Kashi is a very busy guy. He is not a cereal.'),
 (7, 'testdummy', 'test123', 6, 'test@uagc.edu', '(111)222-3333', 'Mx.', 'Can', 'Do', '111-22-3333', 123456789, 102030405, '2023-08-13', '1401 University of AZ  Tucson, AZ  85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.');
 
 -- --------------------------------------------------------
@@ -283,6 +362,13 @@ ALTER TABLE `rooms`
   ADD PRIMARY KEY (`room_id`);
 
 --
+-- Indexes for table `semesters`
+--
+ALTER TABLE `semesters`
+  ADD PRIMARY KEY (`semester_name`),
+  ADD UNIQUE KEY `semester_name` (`semester_name`);
+
+--
 -- Indexes for table `students`
 --
 ALTER TABLE `students`
@@ -292,7 +378,8 @@ ALTER TABLE `students`
 -- Indexes for table `subject_tracks`
 --
 ALTER TABLE `subject_tracks`
-  ADD PRIMARY KEY (`track_id`);
+  ADD PRIMARY KEY (`track_id`),
+  ADD UNIQUE KEY `track_id` (`track_id`);
 
 --
 -- Indexes for table `teachers`
@@ -315,7 +402,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `offerings`
 --
 ALTER TABLE `offerings`
-  MODIFY `class_id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `class_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `subject_tracks`
+--
+ALTER TABLE `subject_tracks`
+  MODIFY `track_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `users`

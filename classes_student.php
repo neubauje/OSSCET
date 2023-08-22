@@ -9,12 +9,6 @@
 <div class="container text-center">
 <h1>Student-facing class offerings</h1>
 </div>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Courses</title>
     <style type="text/css">
         .bs-example{
             margin: 10px;
@@ -54,23 +48,68 @@ if(isset($_POST['enroll'])){
         if($search_enrollments_result->num_rows <1)
         {$seats_query = mysqli_query($conn, "SELECT vacancies FROM offerings WHERE `class_id`=$selected_class_id");
             $vacant_seats = mysqli_fetch_assoc($seats_query);
-            echo "Printing array: ";
-            echo '<pre>'; print_r($vacant_seats); echo '</pre>';
-            $seats_number = $vacant_seats[0];
-            if($seats_number > 0){$sql_query_enroll = "INSERT INTO `enrollment` (`class_id`, `student_id`, `status`)
+            $seats_number = $vacant_seats['vacancies'];
+            if($seats_number > 0){$sql_query_enroll = "INSERT INTO `enrollment` (`class_id`, `student_id`, `enrollment_status`)
             VALUES ($selected_class_id, '$student_id', 'a')";
-            $updated_seats = $seats_number--;
-            $sql_query_seat = "UPDATE `offerings` SET `vacancies` = $updated_seats WHERE `class_id` = $selected_class_id";
+            $seats_number = $seats_number - 1;
+            $sql_query_seat = "UPDATE `offerings` SET `vacancies` = $seats_number WHERE `class_id` = $selected_class_id";
        
             if (mysqli_query($conn, $sql_query_enroll) && mysqli_query($conn, $sql_query_seat)) 
             {
-               echo "Successfully registered for class!";
+               echo "Successfully registered for class!";?>
+               <meta http-equiv="refresh" content="0;URL=classes.php" /><?php
             } 
             else
             {
                echo "Error: " . $sql . "" . mysqli_error($conn);
             }}
         else{ echo "Class is full. Wait list functionality under development.";}}
+        else{
+            $seats_query = mysqli_query($conn, "SELECT vacancies FROM offerings WHERE `class_id`=$selected_class_id");
+            $vacant_seats = mysqli_fetch_assoc($seats_query);
+            $seats_number = $vacant_seats['vacancies'];
+            if($seats_number > 0)
+            {$sql_query_enroll = "UPDATE `enrollment` SET `enrollment_status` = 'a' WHERE `class_id`=$selected_class_id and `student_id` = '$student_id'";
+            $seats_number = $seats_number - 1;
+            $sql_query_seat = "UPDATE `offerings` SET `vacancies` = $seats_number WHERE `class_id` = $selected_class_id";
+       
+            if (mysqli_query($conn, $sql_query_enroll) && mysqli_query($conn, $sql_query_seat)) 
+            {
+               echo "Successfully re-enrolled in class!"; ?>
+               <meta http-equiv="refresh" content="0;URL=classes.php" /><?php
+            } 
+            else
+            {
+               echo "Error: " . $sql . "" . mysqli_error($conn);
+            }}
+        else{ echo "Class is full. Wait list functionality under development.";}
+        }
+    }
+}
+
+if(isset($_POST['withdraw'])){
+    $selected_class_id = $_POST['class_id'];
+    if($search_enrollments = $conn->prepare('SELECT * from enrollment where class_id=? and student_id=?')){
+        $search_enrollments->execute([$selected_class_id, $student_id]);
+        $search_enrollments_result = $search_enrollments->get_result();
+        if($search_enrollments_result->num_rows > 0)
+        {$seats_query = mysqli_query($conn, "SELECT vacancies FROM offerings WHERE `class_id`=$selected_class_id");
+            $vacant_seats = mysqli_fetch_assoc($seats_query);
+            $seats_number = $vacant_seats['vacancies'];
+            $sql_query_enroll = "UPDATE `enrollment` SET `enrollment_status` = 'w' WHERE `class_id` = $selected_class_id and `student_id` = '$student_id'";
+            $seats_number = $seats_number + 1;
+            $sql_query_seat = "UPDATE `offerings` SET `vacancies` = $seats_number WHERE `class_id` = $selected_class_id";
+       
+            if (mysqli_query($conn, $sql_query_enroll) && mysqli_query($conn, $sql_query_seat)) 
+            {
+               echo "Successfully withdrawn from class.";?>
+               <meta http-equiv="refresh" content="0;URL=classes.php" /><?php
+            } 
+            else
+            {
+               echo "Error: " . $sql . "" . mysqli_error($conn);
+            }
+        }
     }
 }
                    
@@ -135,7 +174,15 @@ $search_result = $search->get_result();
                         <td><?php echo $location; ?></td>
                         <td><?php echo $teacher_name; ?></td>
                         <td><?php echo $time_slot; ?></td>
-                        <td><form method="POST" action="classes.php"><input type="hidden" name="class_id" value="<?php echo $row['class_id'] ?>"><input type="submit" name="enroll" value="Enroll in this course"></form></td>
+                        <?php $displayed_class_id = $row["class_id"];
+                        if($search_enrollments = $conn->prepare('SELECT * from enrollment where class_id=? and student_id=? and enrollment_status="a"')){
+                            $search_enrollments->execute([$displayed_class_id, $student_id]);
+                            $search_enrollments_result = $search_enrollments->get_result();
+                        if($search_enrollments_result->num_rows <1){ ?>
+                            <td><form method="POST" action="classes.php"><input type="hidden" name="class_id" value="<?php echo $row['class_id'] ?>"><input type="submit" name="enroll" value="Enroll in this class"></form></td> <?php }
+                        else { ?>
+                        <td><form method="POST" action="classes.php"><input type="hidden" name="class_id" value="<?php echo $row['class_id'] ?>"><input type="submit" name="withdraw" value="Withdraw from this class"></form></td>
+                       <?php }} ?>
                     </tr>
                     <?php
                     $i++;

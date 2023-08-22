@@ -25,8 +25,7 @@ label{display:inline-block;width:100px;margin-bottom:10px;}
 <div class="container text-center">
 <h1>Welcome to the Online Self-Service Course Enrollment Tool (OSSCET)</h1>
 </div>
-
-
+<meta http-equiv="refresh" content="0;URL=index.php" />
 <?php require_once 'footer.php';?>
 </body>
 </html>

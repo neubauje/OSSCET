@@ -63,19 +63,17 @@ if ($conn->connect_error) {
 					echo 'Welcome, ' . $_SESSION['name'] . '!';
 
 					if(($_SESSION['role_id'] == 1) or ($_SESSION['role_id'] == 2)){
-						if ($student = $conn->prepare('SELECT email, phone, dob, ssn, bank_account_number, bank_routing_number, admission_date, graduation_date, mailing_address, cumulative_gpa FROM students WHERE user_id = ?')){
+						if ($student = $conn->prepare('SELECT email, phone, dob, ssn, admission_date, graduation_date, mailing_address, cumulative_gpa FROM students WHERE user_id = ?')){
 							$student->bind_param('i', $user_id);
 							$student->execute();
 							$student->store_result();
 							if ($student->num_rows > 0){
-								$student->bind_result($email, $phone, $dob, $ssn, $bank_account_number, $bank_routing_number, $admission_date, $graduation_date, $mailing_address, $cumulative_gpa);
+								$student->bind_result($email, $phone, $dob, $ssn, $admission_date, $graduation_date, $mailing_address, $cumulative_gpa);
 								$student->fetch();
 								$_SESSION['email'] = $email;
 								$_SESSION['phone'] = $phone;
 								$_SESSION['dob'] = $dob;
 								$_SESSION['ssn'] = $ssn;
-								$_SESSION['bank_account_number'] = $bank_account_number;
-								$_SESSION['bank_routing_number'] = $bank_routing_number;
 								$_SESSION['admission_date'] = $admission_date;
 								$_SESSION['graduation_date'] = $graduation_date;
 								$_SESSION['mailing_address'] = $mailing_address;
@@ -85,19 +83,17 @@ if ($conn->connect_error) {
 					}
 
 					if(($_SESSION['role_id'] == 4) or ($_SESSION['role_id'] == 5) or ($_SESSION['role_id'] == 6)){
-						if ($teacher = $conn->prepare('SELECT email, phone, prefix, ssn, bank_account_number, bank_routing_number, hire_date, mailing_address, salary FROM teachers WHERE user_id = ?')){
+						if ($teacher = $conn->prepare('SELECT email, phone, prefix, ssn, hire_date, mailing_address, salary FROM teachers WHERE user_id = ?')){
 							$teacher->bind_param('i', $user_id);
 							$teacher->execute();
 							$teacher->store_result();
 							if ($teacher->num_rows > 0){
-								$teacher->bind_result($email, $phone, $prefix, $ssn, $bank_account_number, $bank_routing_number, $hire_date, $mailing_address, $salary);
+								$teacher->bind_result($email, $phone, $prefix, $ssn, $hire_date, $mailing_address, $salary);
 								$teacher->fetch();
 								$_SESSION['email'] = $email;
 								$_SESSION['phone'] = $phone;
 								$_SESSION['prefix'] = $prefix;
 								$_SESSION['ssn'] = $ssn;
-								$_SESSION['bank_account_number'] = $bank_account_number;
-								$_SESSION['bank_routing_number'] = $bank_routing_number;
 								$_SESSION['hire_date'] = $hire_date;
 								$_SESSION['mailing_address'] = $mailing_address;
 								$_SESSION['salary'] = $salary;
@@ -117,7 +113,8 @@ if ($conn->connect_error) {
 			$stmt->close();
 		}
 	
-		 mysqli_close($conn);
+		 mysqli_close($conn); ?>
+		 <meta http-equiv="refresh" content="0;URL=profile.php" /> <?php
 	}
 
 	if(isset($_POST['update_user'])){
@@ -164,8 +161,6 @@ mysqli_close($conn);
 		 $last_name = $_POST['last_name'];
 		 $dob = $_POST['dob'];
 		 $ssn = $_POST['ssn'];
-		 $bank_account_number = $_POST['bank_account_number'];
-		 $bank_routing_number = $_POST['bank_routing_number'];
 		 $mailing_address = $_POST['mailing_address'];
 
 		if ($stmt = $conn->prepare('SELECT * FROM students WHERE user_id = ?')) {
@@ -184,8 +179,6 @@ mysqli_close($conn);
 				`last_name` = '$last_name', 
 				`dob` = '$dob', 
 				`ssn` = '$ssn', 
-				`bank_account_number` = '$bank_account_number', 
-				`bank_routing_number` = '$bank_routing_number', 
 				`mailing_address` = '$mailing_address'
 		 WHERE `user_id` = $user_id";
 			}
@@ -201,9 +194,7 @@ mysqli_close($conn);
 		 `first_name`, 
 		 `last_name`, 
 		 `dob`, 
-		 `ssn`, 
-		 `bank_account_number`, 
-		 `bank_routing_number`, 
+		 `ssn`,  
 		 `mailing_address`)
 		 VALUES ($user_id, 
 		 '$username', 
@@ -215,8 +206,6 @@ mysqli_close($conn);
 		 '$last_name', 
 		 '$dob', 
 		 '$ssn', 
-		 '$bank_account_number', 
-		 '$bank_routing_number', 
 		 '$mailing_address')";
 		 }
 		 }
@@ -232,8 +221,6 @@ mysqli_close($conn);
 			$_SESSION['last_name'] = $last_name;
 			$_SESSION['dob'] = $dob;
 			$_SESSION['ssn'] = $ssn;
-			$_SESSION['bank_account_number'] = $bank_account_number;
-			$_SESSION['bank_routing_number'] = $bank_routing_number;
 			$_SESSION['mailing_address'] = $mailing_address;
 		 } 
 		 else
@@ -256,8 +243,6 @@ if(isset($_POST['update_teacher'])){
 		 $first_name = $_POST['first_name'];
 		 $last_name = $_POST['last_name'];
 		 $ssn = $_POST['ssn'];
-		 $bank_account_number = $_POST['bank_account_number'];
-		 $bank_routing_number = $_POST['bank_routing_number'];
 		 $mailing_address = $_POST['mailing_address'];
 		 $bio_summary = $_POST['bio_summary'];
 
@@ -277,9 +262,7 @@ if(isset($_POST['update_teacher'])){
 				`prefix` = '$prefix',
 				`first_name` = '$first_name', 
 				`last_name` = '$last_name', 
-				`ssn` = '$ssn', 
-				`bank_account_number` = '$bank_account_number', 
-				`bank_routing_number` = '$bank_routing_number', 
+				`ssn` = '$ssn',  
 				`mailing_address` = '$mailing_address',
 				`bio_summary` = '$bio_summary'
 		 WHERE `user_id` = $user_id";
@@ -297,8 +280,6 @@ if(isset($_POST['update_teacher'])){
 		 `first_name`, 
 		 `last_name`, 
 		 `ssn`, 
-		 `bank_account_number`, 
-		 `bank_routing_number`, 
 		 `mailing_address`,
 		 `bio_summary`)
 		 VALUES ($user_id, 
@@ -311,8 +292,6 @@ if(isset($_POST['update_teacher'])){
 		 '$first_name', 
 		 '$last_name',
 		 '$ssn', 
-		 '$bank_account_number', 
-		 '$bank_routing_number', 
 		 '$mailing_address',
 		 '$bio_summary')";
 		 }
@@ -329,8 +308,6 @@ if(isset($_POST['update_teacher'])){
 			$_SESSION['first_name'] = $first_name;
 			$_SESSION['last_name'] = $last_name;
 			$_SESSION['ssn'] = $ssn;
-			$_SESSION['bank_account_number'] = $bank_account_number;
-			$_SESSION['bank_routing_number'] = $bank_routing_number;
 			$_SESSION['mailing_address'] = $mailing_address;
 			$_SESSION['bio_summary'] = $bio_summary;
 		 } 

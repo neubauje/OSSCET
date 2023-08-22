@@ -43,7 +43,7 @@
             <label for="teacher_id">Teacher ID</label>
             <input class="form-control" name='username' type="username" value="<?php echo $teacher_id;?>" />
         </div>
-        <div class="form-group"><label for="semester_name">Semester </label><select name="room_id">
+        <div class="form-group"><label for="semester_name">Semester </label><select name="semester_name">
 <?php $semesters = mysqli_query($conn,"SELECT * from semesters ORDER BY `start_date`"); $l=0;
                     while($semesters_list = mysqli_fetch_array($semesters)) {
                         $semester_name = $semesters_list["semester_name"];

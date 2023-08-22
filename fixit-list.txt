@@ -1,10 +1,20 @@
-Secure forms against SQL injection, and hopefully make them allowed to have ' in the text fields
+Secure forms against SQL injection, and hopefully make them allowed to have ' in the text fields - process the strings before saving to the database
 The track selection drop-down for creating a course isn't recording anything but a 0
 when not pre-loaded, build a course-selecting dropdown for the class offerings creator form
-after logging in, display the logged in header instead of the logged out header, or automatically redirect to index
+build the "My Schedule" page for teachers
+make the waitlist function
+make the prerequisites function
+make a password change/password recovery function
 
+handle the signing up of teacher's aides for classes - add to enrollments, but do not take up a seat
 
-    Create the register for classes.
-    List classes you are registered for.
-    Add more courses to your semester.
-    Delete classes from your schedule.
+"My Messages" should include a field to send outgoing mail
+"My Grades" possibly should show abbreviated class list once a class is joined?  
+Profile page requests for you to save everytime it's viewed, page should not require editing unless requested.  Needs an Edit button
+
+work with the tables to make them searchable/filterable
+add in checks to make sure there's a matching number of hours being taught per week to the number of credit hours
+add in checks to make sure there's no conflict in timeslots between teacher and room and student
+
+make room names and teacher names clickable links to get more information
+on teacher's info page, see all courses currently offered by that teacher

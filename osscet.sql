@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 20, 2023 at 06:13 PM
+-- Generation Time: Aug 24, 2023 at 09:10 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -46,12 +46,16 @@ INSERT INTO `courses` (`course_id`, `course_name`, `summary`, `credits`, `track_
 ('ACCT 210', 'Introduction to Managerial Accounting', 'Concepts involved in uses of accounting data in the managerial process.', 3, 16, NULL, 30),
 ('ACCT 250', 'Survey of Accounting', 'This course provides a basic introduction to both financial and managerial accounting topics. It concentrates on concepts and relationships involved in preparing and analyzing financial statements and some basic decision making for internal financial managers. This course is for non-BSBA students ONLY. This course will not meet the Eller College of Management requirements for professional admission.', 3, 16, NULL, 50),
 ('ACCT 310', 'Cost and Managerial Accounting', 'Concepts and analytical procedures necessary in the generation of accounting data for management planning control.', 3, 16, NULL, 30),
-('COMP 100', 'Computer Science for Testing', 'I have not yet figured out why the capacity reset to 0, but perhaps this will fix the track capture.', 3, 3, NULL, 25),
-('EXMP 101', 'Testing the Creation of Courses', 'This is my second attempt to create a course.', 1, 0, NULL, NULL),
-('EXMP 103', 'Adding Capacities', 'Now I am adding the capacity and track, but still need to figure out how to accept escape characters such as an apostrophe.', 1, 0, NULL, NULL),
-('EXMP 104', 'Once More, with Feeling!', 'I forgot to add the post variables. Trying again.', 2, 0, NULL, 50),
-('HIST 207', 'Games and Play in Medieval and Early Modern Europe', 'Games provide entertainment and recreation, but they also reflect, influence, and supply metaphors for many other aspects of life. We will explore the importance of games in shaping medieval and early modern societies by focusing on four games that have come to symbolize the era - chess, jousting, hunting, and dice games. Through our examination of these and other games, we will explore the social, political, religious, economic, legal, military, and intellectual history of medieval and early modern Europe.', 3, 9, 0, NULL),
-('OSCM 373', 'Basic Operations Management', 'This course is an introduction to the concepts, principles, problems, and practices of operations management. Operations Management is one of the key functional areas in any organization or company that deals with the production of goods and services. This course is concerned with the tasks, issues and decisions of those operations managers who have made the services and products on which we all depend. Emphasis is on managerial processes for effective operations in both goods-producing and service- rendering organization. Topics include operations strategy, process design, capacity planning, facilities location and design, forecasting, production scheduling, inventory control, quality assurance, and project management. The topics are integrated using a systems model of the operations of an organization. ', 3, 16, 0, NULL);
+('CSC 345', 'Analysis of Discrete Structures', 'Introduction to and analysis of algorithms and characteristics of discrete structures. Course topics include algorithm analysis techniques, recurrence relations, structural induction, hierarchical structures, graphs, hashing, and sorting.', 4, 3, NULL, 20),
+('ECE 175', 'Computer Programming for Engineering Applications', 'Fundamentals of C, complexity and efficiency analysis, numerical precision and representations, intro to data structures, structured program design, application to solving engineering problems.', 3, 3, NULL, 15),
+('ECE 274A', 'Digital Logic', 'Number systems and coding, logic design, sequential systems, register transfer language.', 4, 3, NULL, 15),
+('HIST 207', 'Games and Play in Medieval and Early Modern Europe', 'Games provide entertainment and recreation, but they also reflect, influence, and supply metaphors for many other aspects of life. We will explore the importance of games in shaping medieval and early modern societies by focusing on four games that have come to symbolize the era - chess, jousting, hunting, and dice games. Through our examination of these and other games, we will explore the social, political, religious, economic, legal, military, and intellectual history of medieval and early modern Europe.', 3, 9, 0, 40),
+('LAR 440', 'Contemporary Landscape Architecture', 'This course examines 20th and 21st century prominent design figures that have shaped the profession of landscape architecture. Through case reviews of built works including significant gardens, urban designs, recreational areas, corporate landscapes, restored natural sites, heritage sites, waterfront projects, resorts, etc., we will explore the evolution of design ideology and theory in applied landscape architectural practice.', 3, 15, NULL, 40),
+('MATH 243', 'Discrete Mathematics in Computer Science', 'Graphs and networks; set theory, logic, discrete structures; induction and recursion;\r\ntechniques of proof. Course calendar on class website.', 3, 8, NULL, 40),
+('OSCM 373', 'Basic Operations Management', 'This course is an introduction to the concepts, principles, problems, and practices of operations management. Operations Management is one of the key functional areas in any organization or company that deals with the production of goods and services. This course is concerned with the tasks, issues and decisions of those operations managers who have made the services and products on which we all depend. Emphasis is on managerial processes for effective operations in both goods-producing and service- rendering organization. Topics include operations strategy, process design, capacity planning, facilities location and design, forecasting, production scheduling, inventory control, quality assurance, and project management. The topics are integrated using a systems model of the operations of an organization. ', 3, 16, 0, 30),
+('SFWE 101', ' Introduction to Software Engineering', 'This course introduces students to the different software development lifecycle (SDLC) phases used in\r\ndeveloping, delivering, and maintaining software products. Students will also acquire basic software\r\ndevelopment skills and understand common terminology used in the software engineering profession.\r\nStudents will also learn and practice using traditional coding standards/guidelines. Python software\r\ndevelopment libraries and debugging tools will be explored and used in projects to familiarize students SFWE 101 2\r\nwith basic tasks involved in modifying, building, and testing software. The course will also lay the\r\nfoundation for achieving academic and career success in Software Engineering.', 3, 3, NULL, 20),
+('SIE 277', 'Object-Oriented Modeling and Design', 'Modeling and design of complex systems using all views of the Unified Modeling Language (UML).\r\nMost effort will be in the problem domain (defining the problem). Some effort will be in the\r\nsolution domain (designing and/or producing hardware or software).', 3, 3, NULL, 20),
+('UNIV 301', 'General Education Portfolio', 'UNIV 301 gives you the opportunity to reflect and make meaning of your general education experience while creating your ePortfolio.', 1, 1, NULL, 300);
 
 -- --------------------------------------------------------
 
@@ -63,9 +67,23 @@ CREATE TABLE `enrollment` (
   `class_id` bigint(20) NOT NULL,
   `student_id` varchar(20) NOT NULL,
   `enrollment_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `status` char(1) DEFAULT NULL,
+  `enrollment_status` char(1) DEFAULT NULL,
   `grade` double DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `enrollment`
+--
+
+INSERT INTO `enrollment` (`class_id`, `student_id`, `enrollment_date`, `enrollment_status`, `grade`) VALUES
+(1, 'movesLikeJagger', '2023-08-22 02:05:01', 'w', NULL),
+(1, 'neubauje', '2023-08-20 16:30:21', 'a', NULL),
+(1, 'testdummy', '2023-08-20 19:00:01', 'w', NULL),
+(2, 'testdummy', '2023-08-20 19:00:03', 'w', NULL),
+(3, 'neubauje', '2023-08-20 17:38:02', 'a', NULL),
+(3, 'testdummy', '2023-08-20 18:59:59', 'w', NULL),
+(6, 'neubauje', '2023-08-22 01:31:21', 'a', NULL),
+(7, 'movesLikeJagger', '2023-08-22 02:03:03', 'a', NULL);
 
 -- --------------------------------------------------------
 
@@ -97,9 +115,13 @@ CREATE TABLE `offerings` (
 --
 
 INSERT INTO `offerings` (`class_id`, `course_id`, `teacher_id`, `room_id`, `occupancy`, `vacancies`, `semester_name`, `start_time`, `end_time`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`) VALUES
-(1, 'ACCT 200', 'Kashiru', '76-232', 24, 24, 'Fall 2023', '10:00:00', '11:00:00', 1, 0, 1, 0, 1, 0, 0),
-(2, 'ACCT 210', 'Kashiru', '56-104', 30, 30, 'Spring 2024', '12:00:00', '13:00:00', 0, 1, 1, 1, 0, 0, 0),
-(3, 'ACCT 250', 'Kashiru', '113-204', 50, 50, 'Winter 2023', '09:00:00', '10:00:00', 0, 0, 1, 1, 1, 0, 0);
+(1, 'ACCT 200', 'Kashiru', '76-232', 24, 23, 'Fall 2023', '11:00:00', '12:00:00', 1, 0, 1, 0, 1, 0, 0),
+(3, 'ACCT 250', 'Kashiru', '113-204', 50, 49, 'Winter 2023', '09:00:00', '10:00:00', 0, 0, 1, 1, 1, 0, 0),
+(5, 'SFWE 101', 'Trickster', '113-209', 20, 20, 'Fall 2023', '15:00:00', '16:30:00', 0, 1, 0, 1, 0, 0, 0),
+(6, 'ECE 274A', 'Trickster', '11-1M', 12, 11, 'Winter 2023', '15:00:00', '17:00:00', 0, 0, 0, 0, 0, 1, 1),
+(7, 'ACCT 250', 'BestBetsy', '76-232', 24, 23, 'Fall 2023', '09:00:00', '10:30:00', 0, 1, 0, 1, 0, 0, 0),
+(8, 'ACCT 310', 'BestBetsy', '56-104', 30, 30, 'Winter 2023', '09:00:00', '10:00:00', 1, 0, 1, 0, 1, 0, 0),
+(9, 'ACCT 210', 'Kashiru', '11-206', 30, 30, 'Spring 2024', '15:00:00', '16:00:00', 1, 0, 1, 1, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -149,7 +171,7 @@ CREATE TABLE `rooms` (
 
 INSERT INTO `rooms` (`room_id`, `room_name`, `building_name`, `capacity`, `ada_accessible`, `building_address`) VALUES
 ('103-108', '0108 Lecture Hall', 'John P. Schaefer Center For Creative Photogragraphy', 224, 1, '1030 N Olive Rd'),
-('11-1M', '0001M Class Laboratory', 'John W. Harshbarger Building', 16, 0, '1133 E James E. Rogers Way'),
+('11-1M', '0001M Class Laboratory', 'John W. Harshbarger Building', 12, 0, '1133 E James E. Rogers Way'),
 ('11-1N', '0001N Class Laboratory', 'John W. Harshbarger Building', 6, 0, '1133 E James E. Rogers Way'),
 ('11-206', '0206 Classroom', 'John W. Harshbarger Building', 50, 1, '1133 E James E. Rogers Way'),
 ('113-204', '0204 Lecture Hall', 'Henry Koffler Building', 300, 1, '1340 E University Blvd'),
@@ -203,8 +225,6 @@ CREATE TABLE `students` (
   `last_name` varchar(45) NOT NULL,
   `dob` date DEFAULT NULL,
   `ssn` varchar(20) DEFAULT NULL,
-  `bank_account_number` int(11) DEFAULT NULL,
-  `bank_routing_number` int(11) DEFAULT NULL,
   `admission_date` date NOT NULL DEFAULT current_timestamp(),
   `graduation_date` int(11) DEFAULT NULL,
   `mailing_address` varchar(500) DEFAULT NULL,
@@ -215,9 +235,10 @@ CREATE TABLE `students` (
 -- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`user_id`, `student_id`, `password`, `role_id`, `email`, `phone`, `first_name`, `last_name`, `dob`, `ssn`, `bank_account_number`, `bank_routing_number`, `admission_date`, `graduation_date`, `mailing_address`, `cumulative_gpa`) VALUES
-(8, 'movesLikeJagger', 'MickeyMouse', 2, 'mj@uagc.edu', '(111)222-3333', 'Mick', 'Jagger', '1943-07-26', '111-22-3333', 123456789, 102030405, '2023-08-14', NULL, 'Abbey Road. Look it up.', NULL),
-(1, 'neubauje', 'password', 1, 'neubauje@gmail.com', '740-407-8022', 'Jesse', 'Neubauer', '1990-06-29', '111-22-3333', 123456789, 102030405, '2023-08-13', NULL, '123 Main St, UAGC, AZ, 12345', NULL);
+INSERT INTO `students` (`user_id`, `student_id`, `password`, `role_id`, `email`, `phone`, `first_name`, `last_name`, `dob`, `ssn`, `admission_date`, `graduation_date`, `mailing_address`, `cumulative_gpa`) VALUES
+(8, 'movesLikeJagger', 'MickeyMouse', 2, 'mj@uagc.edu', '(111)222-3333', 'Mick', 'Jagger', '1943-07-26', '111-22-3333', '2023-08-14', NULL, 'Abbey Road. Look it up.', NULL),
+(1, 'neubauje', 'password', 1, 'neubauje@gmail.com', '740-407-8022', 'Jesse', 'Neubauer', '1990-06-29', '111-22-3333', '2023-08-13', NULL, '123 Main St, UAGC, AZ, 12345', NULL),
+(4, 'Trickster', 'Nope', 4, 'trickster@uagc.edu', '(111)222-3333', 'Anna', 'Phinneagar', '0000-00-00', '111-22-3333', '2023-08-20', NULL, '123 Main St, UAGC, AZ, 12345', NULL);
 
 -- --------------------------------------------------------
 
@@ -277,8 +298,6 @@ CREATE TABLE `teachers` (
   `first_name` varchar(45) NOT NULL,
   `last_name` varchar(45) NOT NULL,
   `ssn` varchar(20) DEFAULT NULL,
-  `bank_account_number` int(11) DEFAULT NULL,
-  `bank_routing_number` int(11) DEFAULT NULL,
   `hire_date` date NOT NULL DEFAULT current_timestamp(),
   `mailing_address` varchar(500) DEFAULT NULL,
   `salary` double DEFAULT NULL,
@@ -289,12 +308,12 @@ CREATE TABLE `teachers` (
 -- Dumping data for table `teachers`
 --
 
-INSERT INTO `teachers` (`user_id`, `teacher_id`, `password`, `role_id`, `email`, `phone`, `prefix`, `first_name`, `last_name`, `ssn`, `bank_account_number`, `bank_routing_number`, `hire_date`, `mailing_address`, `salary`, `bio_summary`) VALUES
-(2, 'autumnhound', 'password1', 6, 'student@uagc.edu', '(111)222-3333', 'Ms.', 'Heather', 'Powers', '111-22-3333', 123456789, 102030405, '2023-08-14', '1401 University of AZ  Tucson, AZ  85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.'),
-(4, 'Trickster', 'Nope', 2, 'trixie@uagc.edu', '(111)222-3333', 'Mx.', 'Anna', 'Phinneagar', '111-22-3333', 123456789, 102030405, '2023-08-13', '1401 University of AZ  Tucson, AZ  85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.'),
-(5, 'Pandez', 'IFC2023', 5, 'pandez@uagc.edu', '(111)222-3333', 'Mr.', 'Paul', 'Crozier', '111-22-3334', 123456789, 102030405, '2023-08-14', '1401 University of AZ  Tucson, AZ  85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.'),
-(6, 'Kashiru', 'Money', 4, 'Kashi@uagc.edu', '(111)222-3333', 'Mr.', 'Steven', 'Monteith', '111-22-3333', 123456789, 102030405, '2023-08-13', '1401 University of AZ  Tucson, AZ  85719', NULL, 'Kashi is a very busy guy. He is not a cereal.'),
-(7, 'testdummy', 'test123', 6, 'test@uagc.edu', '(111)222-3333', 'Mx.', 'Can', 'Do', '111-22-3333', 123456789, 102030405, '2023-08-13', '1401 University of AZ  Tucson, AZ  85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.');
+INSERT INTO `teachers` (`user_id`, `teacher_id`, `password`, `role_id`, `email`, `phone`, `prefix`, `first_name`, `last_name`, `ssn`, `hire_date`, `mailing_address`, `salary`, `bio_summary`) VALUES
+(2, 'autumnhound', 'password1', 6, 'student@uagc.edu', '(111)222-3333', 'Ms.', 'Heather', 'Powers', '111-22-3333', '2023-08-14', '1401 University of AZ  Tucson, AZ  85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.'),
+(4, 'Trickster', 'Nope', 4, 'trixie@uagc.edu', '(111)222-3333', 'Dr.', 'Anna', 'Phinneagar', '111-22-3333', '2023-08-13', '1401 University of AZ  Tucson, AZ  85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.'),
+(6, 'Kashiru', 'Money', 4, 'Kashi@uagc.edu', '(111)222-3333', 'Mr.', 'Steven', 'Monteith', '111-22-3333', '2023-08-13', '1401 University of AZ  Tucson, AZ  85719', NULL, 'Kashi is a very busy guy. He is not a cereal.'),
+(7, 'testdummy', 'test123', 6, 'test@uagc.edu', '(111)222-3333', 'Mx.', 'Can', 'Do', '111-22-3333', '2023-08-13', '1401 University of AZ  Tucson, AZ  85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.'),
+(9, 'BestBetsy', 'HowardHanna', 5, 'betsy@uagc.edu', '(111)222-3333', 'Mrs.', 'Betsy', 'McCloskey', '111-22-3333', '2023-08-20', '1401 University of AZ  Tucson, AZ  85719', NULL, 'Realtor by day, college teacher by night.');
 
 -- --------------------------------------------------------
 
@@ -319,11 +338,11 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `role_id`, `first_name`,
 (1, 'neubauje', 'password', 1, 'Jesse', 'Neubauer'),
 (2, 'autumnhound', 'password1', 6, 'Heather', 'Powers'),
 (3, 'jewel', 'passwordsRdum', 3, 'Michael', 'Phinneagar'),
-(4, 'Trickster', 'Nope', 2, 'Anna', 'Phinneagar'),
-(5, 'Pandez', 'IFC2023', 5, 'Paul', 'Crozier'),
+(4, 'Trickster', 'Nope', 4, 'Anna', 'Phinneagar'),
 (6, 'Kashiru', 'Money', 4, 'Steven', 'Monteith'),
 (7, 'testdummy', 'test123', 6, 'Can', 'Do'),
-(8, 'movesLikeJagger', 'MickeyMouse', 2, 'Mick', 'Jagger');
+(8, 'movesLikeJagger', 'MickeyMouse', 2, 'Mick', 'Jagger'),
+(9, 'BestBetsy', 'HowardHanna', 5, 'Betsy', 'McCloskey');
 
 --
 -- Indexes for dumped tables
@@ -402,7 +421,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `offerings`
 --
 ALTER TABLE `offerings`
-  MODIFY `class_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `class_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `subject_tracks`
@@ -414,7 +433,7 @@ ALTER TABLE `subject_tracks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

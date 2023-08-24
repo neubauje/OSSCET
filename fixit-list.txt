@@ -4,6 +4,7 @@ make the waitlist function
 make the prerequisites function
 make a password change/password recovery function
 make the function to allow teachers to cancel a class with students in it, after a popup warning/confirmation
+when a non-unique username is entered, show a validator to keep from accepting it
 
 handle the signing up of teacher's aides for classes - add to enrollments, but do not take up a seat
 

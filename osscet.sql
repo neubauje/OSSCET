@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 24, 2023 at 09:10 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Aug 25, 2023 at 10:50 PM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -35,7 +35,7 @@ CREATE TABLE `courses` (
   `track_id` int(11) NOT NULL,
   `prerequesites` tinyint(1) DEFAULT NULL,
   `default_max_capacity` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `courses`
@@ -65,11 +65,11 @@ INSERT INTO `courses` (`course_id`, `course_name`, `summary`, `credits`, `track_
 
 CREATE TABLE `enrollment` (
   `class_id` bigint(20) NOT NULL,
-  `user_id` varchar(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
   `enrollment_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `enrollment_status` char(1) DEFAULT NULL,
   `grade` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `enrollment`
@@ -79,13 +79,37 @@ INSERT INTO `enrollment` (`class_id`, `user_id`, `enrollment_date`, `enrollment_
 (1, 1, '2023-08-24 20:11:20', 'a', NULL),
 (1, 7, '2023-08-24 20:11:38', 'w', NULL),
 (1, 8, '2023-08-24 20:10:33', 'w', NULL),
+(1, 17, '2023-08-25 20:45:40', 'w', NULL),
 (2, 7, '2023-08-24 20:11:44', 'w', NULL),
 (3, 1, '2023-08-24 20:11:26', 'a', NULL),
 (3, 7, '2023-08-24 20:11:50', 'w', NULL),
-(6, 1, '2023-08-24 20:11:10', 'a', NULL),
+(6, 1, '2023-08-24 22:52:29', 'w', NULL),
 (6, 10, '2023-08-24 20:12:48', 'a', NULL),
 (6, 11, '2023-08-24 20:12:17', 'a', NULL),
-(7, 8, '2023-08-24 20:10:44', 'a', NULL);
+(7, 8, '2023-08-24 20:10:44', 'a', NULL),
+(11, 1, '2023-08-24 22:52:40', 'a', NULL),
+(11, 8, '2023-08-25 19:11:31', 'a', NULL),
+(11, 10, '2023-08-25 19:08:37', 'a', NULL),
+(11, 11, '2023-08-25 19:09:35', 'a', NULL),
+(11, 16, '2023-08-25 20:38:13', 'a', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `messages`
+--
+
+CREATE TABLE `messages` (
+  `message_id` int(11) NOT NULL,
+  `is_reply` tinyint(1) NOT NULL DEFAULT 0,
+  `reply_to_id` int(11) DEFAULT NULL,
+  `message_timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `message_status` char(1) NOT NULL DEFAULT 'u',
+  `sender_id` int(11) NOT NULL,
+  `recipient_id` int(11) NOT NULL,
+  `message_subject` varchar(500) NOT NULL DEFAULT '(No subject)',
+  `message_content` varchar(5000) NOT NULL DEFAULT 'This is a test message.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -101,8 +125,8 @@ CREATE TABLE `offerings` (
   `occupancy` int(11) DEFAULT NULL,
   `vacancies` int(11) DEFAULT NULL,
   `semester_name` varchar(50) NOT NULL,
-  `start_time` time NOT NULL,
-  `end_time` time NOT NULL,
+  `start_time` time DEFAULT NULL,
+  `end_time` time DEFAULT NULL,
   `monday` tinyint(1) DEFAULT NULL,
   `tuesday` tinyint(1) DEFAULT NULL,
   `wednesday` tinyint(1) DEFAULT NULL,
@@ -120,10 +144,12 @@ INSERT INTO `offerings` (`class_id`, `course_id`, `teacher_user_id`, `room_id`, 
 (1, 'ACCT 200', 6, '76-232', 24, 23, 'Fall 2023', '11:00:00', '12:00:00', 1, 0, 1, 0, 1, 0, 0),
 (3, 'ACCT 250', 6, '113-204', 50, 49, 'Winter 2023', '09:00:00', '10:00:00', 0, 0, 1, 1, 1, 0, 0),
 (5, 'SFWE 101', 4, '113-209', 20, 20, 'Fall 2023', '15:00:00', '16:30:00', 0, 1, 0, 1, 0, 0, 0),
-(6, 'ECE 274A', 4, '11-1M', 12, 8, 'Winter 2023', '15:00:00', '17:00:00', 0, 0, 0, 0, 0, 1, 1),
+(6, 'ECE 274A', 4, '11-1M', 12, 9, 'Winter 2023', '15:00:00', '17:00:00', 0, 0, 0, 0, 0, 1, 1),
 (7, 'ACCT 250', 9, '76-232', 24, 23, 'Fall 2023', '09:00:00', '10:30:00', 0, 1, 0, 1, 0, 0, 0),
 (8, 'ACCT 310', 9, '56-104', 30, 30, 'Winter 2023', '09:00:00', '10:00:00', 1, 0, 1, 0, 1, 0, 0),
-(9, 'ACCT 210', 6, '11-206', 30, 30, 'Spring 2024', '15:00:00', '16:00:00', 1, 0, 1, 1, 0, 0, 0);
+(10, 'ACCT 310', 6, '73-319', 28, 28, 'Spring 2024', '14:00:00', '15:30:00', 0, 0, 1, 1, 0, 0, 0),
+(11, 'ECE 274A', 4, '11-1N', 6, 1, 'Fall 2023', '13:00:00', '14:00:00', 1, 1, 1, 1, 0, 0, 0),
+(12, 'UNIV 301', 15, '000', 300, 300, 'Fall 2023', '00:00:00', '00:00:00', 1, 0, 0, 1, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -134,7 +160,7 @@ INSERT INTO `offerings` (`class_id`, `course_id`, `teacher_user_id`, `room_id`, 
 CREATE TABLE `roles` (
   `role_id` int(11) NOT NULL,
   `role_name` varchar(45) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `roles`
@@ -165,13 +191,14 @@ CREATE TABLE `rooms` (
   `capacity` int(11) NOT NULL,
   `ada_accessible` tinyint(1) DEFAULT NULL,
   `building_address` varchar(200) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `rooms`
 --
 
 INSERT INTO `rooms` (`room_id`, `room_name`, `building_name`, `capacity`, `ada_accessible`, `building_address`) VALUES
+('000', 'Remote', 'Online (no physical location)', 999, 1, 'uagc.edu'),
 ('103-108', '0108 Lecture Hall', 'John P. Schaefer Center For Creative Photogragraphy', 224, 1, '1030 N Olive Rd'),
 ('11-1M', '0001M Class Laboratory', 'John W. Harshbarger Building', 12, 0, '1133 E James E. Rogers Way'),
 ('11-1N', '0001N Class Laboratory', 'John W. Harshbarger Building', 6, 0, '1133 E James E. Rogers Way'),
@@ -197,7 +224,7 @@ CREATE TABLE `semesters` (
   `semester_name` varchar(50) NOT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `semesters`
@@ -220,27 +247,30 @@ CREATE TABLE `students` (
   `user_id` int(11) NOT NULL,
   `student_id` varchar(20) NOT NULL,
   `password` varchar(45) NOT NULL,
-  `role_id` int(11) DEFAULT NULL,
-  `email` varchar(45) DEFAULT NULL,
-  `phone` text DEFAULT NULL,
+  `role_id` int(11) NOT NULL,
+  `email` varchar(45) NOT NULL DEFAULT 'student@uagc.edu',
+  `phone` text NOT NULL DEFAULT '(111)222-3333',
   `first_name` varchar(45) NOT NULL,
   `last_name` varchar(45) NOT NULL,
-  `dob` date DEFAULT NULL,
-  `ssn` varchar(20) DEFAULT NULL,
+  `dob` date NOT NULL DEFAULT '2001-01-01',
+  `ssn` varchar(20) NOT NULL DEFAULT '111-22-3333',
   `admission_date` date NOT NULL DEFAULT current_timestamp(),
   `graduation_date` int(11) DEFAULT NULL,
-  `mailing_address` varchar(500) DEFAULT NULL,
+  `mailing_address` varchar(500) NOT NULL DEFAULT '123 Main St, UAGC, AZ, 12345',
   `cumulative_gpa` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `students`
 --
 
 INSERT INTO `students` (`user_id`, `student_id`, `password`, `role_id`, `email`, `phone`, `first_name`, `last_name`, `dob`, `ssn`, `admission_date`, `graduation_date`, `mailing_address`, `cumulative_gpa`) VALUES
+(17, 'Falanx', '12345', 1, 'student@uagc.edu', '(111)222-3333', 'No', 'Thanks', '2001-01-01', '111-22-3333', '2023-08-25', NULL, '123 Main St, UAGC, AZ, 12345', NULL),
+(16, 'Jakebunny', '#fastestbun', 1, 'student@uagc.edu', '(111)222-3333', 'Jake', 'Rupert', '2001-01-01', '111-22-3333', '2023-08-25', NULL, '123 Main St, UAGC, AZ, 12345', NULL),
+(11, 'mewbauje', 'testing', 1, 'mewb@uagc.edu', '(111)222-3333', 'Jesse', 'Neub', '0000-00-00', '111-22-3333', '2023-08-24', NULL, '123 Main St, UAGC, AZ, 12345', NULL),
 (8, 'movesLikeJagger', 'MickeyMouse', 2, 'mj@uagc.edu', '(111)222-3333', 'Mick', 'Jagger', '1943-07-26', '111-22-3333', '2023-08-14', NULL, 'Abbey Road. Look it up.', NULL),
 (1, 'neubauje', 'password', 1, 'neubauje@gmail.com', '740-407-8022', 'Jesse', 'Neubauer', '1990-06-29', '111-22-3333', '2023-08-13', NULL, '123 Main St, UAGC, AZ, 12345', NULL),
-(4, 'Trickster', 'Nope', 4, 'trickster@uagc.edu', '(111)222-3333', 'Anna', 'Phinneagar', '0000-00-00', '111-22-3333', '2023-08-20', NULL, '123 Main St, UAGC, AZ, 12345', NULL);
+(10, 'uniqueNY', 'IloveNewYork', 1, 'NewYork@uagc.edu', '(111)222-3333', 'Unique', 'New York', '0000-00-00', '111-22-3333', '2023-08-24', NULL, '123 Main St, UAGC, AZ, 12345', NULL);
 
 -- --------------------------------------------------------
 
@@ -251,7 +281,7 @@ INSERT INTO `students` (`user_id`, `student_id`, `password`, `role_id`, `email`,
 CREATE TABLE `subject_tracks` (
   `track_id` int(11) NOT NULL,
   `track_name` varchar(45) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `subject_tracks`
@@ -294,17 +324,17 @@ CREATE TABLE `teachers` (
   `teacher_id` varchar(20) NOT NULL,
   `password` varchar(45) NOT NULL,
   `role_id` int(11) DEFAULT NULL,
-  `email` varchar(45) DEFAULT NULL,
-  `phone` varchar(45) DEFAULT NULL,
-  `prefix` varchar(5) DEFAULT NULL,
+  `email` varchar(45) DEFAULT 'teacher@uagc.edu',
+  `phone` varchar(45) DEFAULT '(111)222-3333',
+  `prefix` varchar(5) DEFAULT 'Mx.',
   `first_name` varchar(45) NOT NULL,
   `last_name` varchar(45) NOT NULL,
-  `ssn` varchar(20) DEFAULT NULL,
+  `ssn` varchar(20) DEFAULT '111-22-3333',
   `hire_date` date NOT NULL DEFAULT current_timestamp(),
-  `mailing_address` varchar(500) DEFAULT NULL,
+  `mailing_address` varchar(500) DEFAULT '1401 University of AZ, Tucson, AZ, 85719',
   `salary` double DEFAULT NULL,
-  `bio_summary` varchar(1000) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `bio_summary` varchar(1000) DEFAULT 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `teachers`
@@ -315,7 +345,8 @@ INSERT INTO `teachers` (`user_id`, `teacher_id`, `password`, `role_id`, `email`,
 (4, 'Trickster', 'Nope', 4, 'trixie@uagc.edu', '(111)222-3333', 'Dr.', 'Anna', 'Phinneagar', '111-22-3333', '2023-08-13', '1401 University of AZ  Tucson, AZ  85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.'),
 (6, 'Kashiru', 'Money', 4, 'Kashi@uagc.edu', '(111)222-3333', 'Mr.', 'Steven', 'Monteith', '111-22-3333', '2023-08-13', '1401 University of AZ  Tucson, AZ  85719', NULL, 'Kashi is a very busy guy. He is not a cereal.'),
 (7, 'testdummy', 'test123', 6, 'test@uagc.edu', '(111)222-3333', 'Mx.', 'Can', 'Do', '111-22-3333', '2023-08-13', '1401 University of AZ  Tucson, AZ  85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.'),
-(9, 'BestBetsy', 'HowardHanna', 5, 'betsy@uagc.edu', '(111)222-3333', 'Mrs.', 'Betsy', 'McCloskey', '111-22-3333', '2023-08-20', '1401 University of AZ  Tucson, AZ  85719', NULL, 'Realtor by day, college teacher by night.');
+(9, 'BestBetsy', 'HowardHanna', 5, 'betsy@uagc.edu', '(111)222-3333', 'Mrs.', 'Betsy', 'McCloskey', '111-22-3333', '2023-08-20', '1401 University of AZ  Tucson, AZ  85719', NULL, 'Realtor by day, college teacher by night.'),
+(15, 'SnapBat', 'bat', 4, 'teacher@uagc.edu', '(111)222-3333', 'Mr.', 'Snap', 'Bat', '111-22-3333', '2023-08-25', '1401 University of AZTucson, AZ85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.');
 
 -- --------------------------------------------------------
 
@@ -330,13 +361,14 @@ CREATE TABLE `users` (
   `role_id` int(11) NOT NULL DEFAULT 3,
   `first_name` varchar(20) DEFAULT NULL,
   `last_name` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `role_id`, `first_name`, `last_name`) VALUES
+(0, 'system', 'none', 9, 'Automated', 'System'),
 (1, 'neubauje', 'password', 1, 'Jesse', 'Neubauer'),
 (2, 'autumnhound', 'password1', 6, 'Heather', 'Powers'),
 (3, 'jewel', 'passwordsRdum', 3, 'Michael', 'Phinneagar'),
@@ -344,7 +376,12 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `role_id`, `first_name`,
 (6, 'Kashiru', 'Money', 4, 'Steven', 'Monteith'),
 (7, 'testdummy', 'test123', 6, 'Can', 'Do'),
 (8, 'movesLikeJagger', 'MickeyMouse', 2, 'Mick', 'Jagger'),
-(9, 'BestBetsy', 'HowardHanna', 5, 'Betsy', 'McCloskey');
+(9, 'BestBetsy', 'HowardHanna', 5, 'Betsy', 'McCloskey'),
+(10, 'uniqueNY', 'IloveNewYork', 1, 'Unique', 'New York'),
+(11, 'mewbauje', 'testing', 1, 'Jesse', 'Neub'),
+(15, 'SnapBat', 'bat', 4, 'Snap', 'Bat'),
+(16, 'Jakebunny', '#fastestbun', 1, 'Jake', 'Rupert'),
+(17, 'Falanx', '12345', 1, 'No', 'Thanks');
 
 --
 -- Indexes for dumped tables
@@ -363,6 +400,12 @@ ALTER TABLE `courses`
 ALTER TABLE `enrollment`
   ADD PRIMARY KEY (`class_id`,`user_id`),
   ADD UNIQUE KEY `class_id` (`class_id`,`user_id`);
+
+--
+-- Indexes for table `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`message_id`);
 
 --
 -- Indexes for table `offerings`
@@ -420,10 +463,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `offerings`
 --
 ALTER TABLE `offerings`
-  MODIFY `class_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `class_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `subject_tracks`
@@ -435,7 +484,7 @@ ALTER TABLE `subject_tracks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

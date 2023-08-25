@@ -21,7 +21,7 @@ error_reporting(E_ALL ^ E_NOTICE)
 <?php
 
 if($_SESSION['role_id'] == 3){
-    echo "You are a new applicant. Please go to <li><a href='profile.php'><span class='glyphicon glyphicon-briefcase'></span>Profile</a></li> in order to select a role before viewing class offerings.";
+    echo "You are a new applicant. Please go to <a href='profile.php'>Profile</a> in order to select a role before viewing class offerings.";
 }
 if($_SESSION['role_id'] == 1){
     require_once 'classes_student.php';

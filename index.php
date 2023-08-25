@@ -17,13 +17,18 @@ label{display:inline-block;width:100px;margin-bottom:10px;}
 </head>
 <body>
 
-<?php require 'master.php';?>
+<?php include 'master.php';?>
 
 <div class="container text-center">
 <h1>Welcome to the OSSCET</h1>
 </div>
 
 
-<?php require_once 'footer.php';?>
+<?php 
+// echo '<pre>';
+// var_dump($_SESSION);
+// echo '</pre>';
+// require_once 'footer.php';
+?>
 </body>
 </html>

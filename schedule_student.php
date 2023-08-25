@@ -30,15 +30,16 @@
                     <?php
                     include_once 'db.php';
 
-         $student_id = $_SESSION['username'];
+         $user_id = $_SESSION['user_id'];
+         
          $result = mysqli_query($conn,"SELECT * FROM enrollment 
                     INNER JOIN offerings on enrollment.class_id=offerings.class_id
-                    INNER JOIN teachers ON offerings.teacher_id=teachers.teacher_id 
+                    INNER JOIN teachers ON offerings.teacher_user_id=teachers.user_id 
                     INNER JOIN courses ON offerings.course_id=courses.course_id 
                     INNER JOIN rooms ON offerings.room_id=rooms.room_id
                     INNER JOIN semesters ON offerings.semester_name=semesters.semester_name 
-                    WHERE student_id = '$student_id' and enrollment_status = 'a'
-                    ORDER BY `start_date`");
+                    WHERE enrollment.user_id = '$user_id' and enrollment_status = 'a'
+                    ORDER BY `start_date`, `start_time`");
                     $tracks = mysqli_query($conn,"SELECT * from subject_tracks");
                     $courses = mysqli_query($conn,"SELECT * from courses"); 
                     if ($result->num_rows > 0) {
@@ -76,8 +77,8 @@
                             <td><?php echo $teacher_name; ?></td>
                             <td><?php echo $time_slot; ?></td>
                             <?php $displayed_class_id = $row["class_id"];
-                            if($search_enrollments = $conn->prepare('SELECT * from enrollment where class_id=? and student_id=?')){
-                                $search_enrollments->execute([$displayed_class_id, $student_id]);
+                            if($search_enrollments = $conn->prepare('SELECT * from enrollment where `class_id`=? and `user_id`=?')){
+                                $search_enrollments->execute([$displayed_class_id, $user_id]);
                                 $search_enrollments_result = $search_enrollments->get_result();
                             if($search_enrollments_result->num_rows <1){ ?>
                                 <td><form method="POST" action="classes.php"><input type="hidden" name="class_id" value="<?php echo $row['class_id'] ?>"><input type="submit" name="enroll" value="Enroll in this class"></form></td> <?php }

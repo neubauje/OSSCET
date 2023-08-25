@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL ^ E_NOTICE);
-ini_set('session.use_only_cookies','1');
+// ini_set('session.use_only_cookies','1');
 session_start();
 if( isset($_SESSION['username']))
 echo "Welcome: " . $_SESSION['username'];

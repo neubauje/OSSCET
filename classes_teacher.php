@@ -32,23 +32,21 @@
             $course_id = "Please enter a course ID";
          }
 
-         $teacher_id = $_SESSION['username']; ?>
+         $teacher_id = $_SESSION['username'];
+         $teacher_user_id = $_SESSION['user_id']; ?>
 
 <form method="POST" action="classes.php">
 <div class="form-group">
             <label for="course_id">Course ID</label>
             <input class="form-control" name='course_id' type="text" value="<?php echo $course_id;?>" />
         </div>
-        <div class="form-group">
-            <label for="teacher_id">Teacher ID</label>
-            <input class="form-control" name='username' type="username" value="<?php echo $teacher_id;?>" />
-        </div>
+        <input class="hidden" name='teacher_user_id' type="hidden" value=" <?php echo $teacher_user_id; ?> " />
         <div class="form-group"><label for="semester_name">Semester </label><select name="semester_name">
 <?php $semesters = mysqli_query($conn,"SELECT * from semesters ORDER BY `start_date`"); $l=0;
                     while($semesters_list = mysqli_fetch_array($semesters)) {
                         $semester_name = $semesters_list["semester_name"];
                     ?>
-                    <option value="<?php echo $semester_name ?>"> <?php echo $semester_name; ?></option>
+                    <option value="<?php echo $semester_name; ?>"> <?php echo $semester_name; ?></option>
                     <?php
                     $l++;
                     } ?>
@@ -119,9 +117,9 @@
             $saturday = isset($_POST['saturday']);
             $sunday = isset($_POST['sunday']);
     
-		 $sql_query = "INSERT INTO `offerings` (`course_id`, `teacher_id`, `room_id`, `occupancy`, `vacancies`, `semester_name`, `start_time`, `end_time`,
+		 $sql_query = "INSERT INTO `offerings` (`course_id`, `teacher_user_id`, `room_id`, `occupancy`, `vacancies`, `semester_name`, `start_time`, `end_time`,
           `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`)
-		 VALUES ('$course_id', '$teacher_id', '$room_id', '$occupancy', '$occupancy', '$semester_name', '$start_time', '$end_time', 
+		 VALUES ('$course_id', '$teacher_user_id', '$room_id', '$occupancy', '$occupancy', '$semester_name', '$start_time', '$end_time', 
          '$monday', '$tuesday', '$wednesday', '$thursday', '$friday', '$saturday', '$sunday')";
 	
 		 if (mysqli_query($conn, $sql_query)) 
@@ -133,7 +131,7 @@
 			echo "Error: " . $sql . "" . mysqli_error($conn);
 		 }}
                     $result = mysqli_query($conn,"SELECT * FROM offerings 
-                    INNER JOIN teachers ON offerings.teacher_id=teachers.teacher_id 
+                    INNER JOIN teachers ON offerings.teacher_user_id=teachers.user_id 
                     INNER JOIN courses ON offerings.course_id=courses.course_id 
                     INNER JOIN subject_tracks ON courses.track_id=subject_tracks.track_id 
                     INNER JOIN semesters ON offerings.semester_name=semesters.semester_name ORDER BY `start_date`");

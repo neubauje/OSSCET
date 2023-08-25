@@ -65,7 +65,7 @@ INSERT INTO `courses` (`course_id`, `course_name`, `summary`, `credits`, `track_
 
 CREATE TABLE `enrollment` (
   `class_id` bigint(20) NOT NULL,
-  `student_id` varchar(20) NOT NULL,
+  `user_id` varchar(20) NOT NULL,
   `enrollment_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `enrollment_status` char(1) DEFAULT NULL,
   `grade` double DEFAULT NULL
@@ -75,15 +75,17 @@ CREATE TABLE `enrollment` (
 -- Dumping data for table `enrollment`
 --
 
-INSERT INTO `enrollment` (`class_id`, `student_id`, `enrollment_date`, `enrollment_status`, `grade`) VALUES
-(1, 'movesLikeJagger', '2023-08-22 02:05:01', 'w', NULL),
-(1, 'neubauje', '2023-08-20 16:30:21', 'a', NULL),
-(1, 'testdummy', '2023-08-20 19:00:01', 'w', NULL),
-(2, 'testdummy', '2023-08-20 19:00:03', 'w', NULL),
-(3, 'neubauje', '2023-08-20 17:38:02', 'a', NULL),
-(3, 'testdummy', '2023-08-20 18:59:59', 'w', NULL),
-(6, 'neubauje', '2023-08-22 01:31:21', 'a', NULL),
-(7, 'movesLikeJagger', '2023-08-22 02:03:03', 'a', NULL);
+INSERT INTO `enrollment` (`class_id`, `user_id`, `enrollment_date`, `enrollment_status`, `grade`) VALUES
+(1, 1, '2023-08-24 20:11:20', 'a', NULL),
+(1, 7, '2023-08-24 20:11:38', 'w', NULL),
+(1, 8, '2023-08-24 20:10:33', 'w', NULL),
+(2, 7, '2023-08-24 20:11:44', 'w', NULL),
+(3, 1, '2023-08-24 20:11:26', 'a', NULL),
+(3, 7, '2023-08-24 20:11:50', 'w', NULL),
+(6, 1, '2023-08-24 20:11:10', 'a', NULL),
+(6, 10, '2023-08-24 20:12:48', 'a', NULL),
+(6, 11, '2023-08-24 20:12:17', 'a', NULL),
+(7, 8, '2023-08-24 20:10:44', 'a', NULL);
 
 -- --------------------------------------------------------
 
@@ -94,7 +96,7 @@ INSERT INTO `enrollment` (`class_id`, `student_id`, `enrollment_date`, `enrollme
 CREATE TABLE `offerings` (
   `class_id` bigint(20) NOT NULL,
   `course_id` varchar(10) NOT NULL,
-  `teacher_id` varchar(20) NOT NULL,
+  `teacher_user_id` bigint(20) NOT NULL,
   `room_id` varchar(10) NOT NULL,
   `occupancy` int(11) DEFAULT NULL,
   `vacancies` int(11) DEFAULT NULL,
@@ -108,20 +110,20 @@ CREATE TABLE `offerings` (
   `friday` tinyint(1) DEFAULT NULL,
   `saturday` tinyint(1) DEFAULT NULL,
   `sunday` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `offerings`
 --
 
-INSERT INTO `offerings` (`class_id`, `course_id`, `teacher_id`, `room_id`, `occupancy`, `vacancies`, `semester_name`, `start_time`, `end_time`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`) VALUES
-(1, 'ACCT 200', 'Kashiru', '76-232', 24, 23, 'Fall 2023', '11:00:00', '12:00:00', 1, 0, 1, 0, 1, 0, 0),
-(3, 'ACCT 250', 'Kashiru', '113-204', 50, 49, 'Winter 2023', '09:00:00', '10:00:00', 0, 0, 1, 1, 1, 0, 0),
-(5, 'SFWE 101', 'Trickster', '113-209', 20, 20, 'Fall 2023', '15:00:00', '16:30:00', 0, 1, 0, 1, 0, 0, 0),
-(6, 'ECE 274A', 'Trickster', '11-1M', 12, 11, 'Winter 2023', '15:00:00', '17:00:00', 0, 0, 0, 0, 0, 1, 1),
-(7, 'ACCT 250', 'BestBetsy', '76-232', 24, 23, 'Fall 2023', '09:00:00', '10:30:00', 0, 1, 0, 1, 0, 0, 0),
-(8, 'ACCT 310', 'BestBetsy', '56-104', 30, 30, 'Winter 2023', '09:00:00', '10:00:00', 1, 0, 1, 0, 1, 0, 0),
-(9, 'ACCT 210', 'Kashiru', '11-206', 30, 30, 'Spring 2024', '15:00:00', '16:00:00', 1, 0, 1, 1, 0, 0, 0);
+INSERT INTO `offerings` (`class_id`, `course_id`, `teacher_user_id`, `room_id`, `occupancy`, `vacancies`, `semester_name`, `start_time`, `end_time`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`) VALUES
+(1, 'ACCT 200', 6, '76-232', 24, 23, 'Fall 2023', '11:00:00', '12:00:00', 1, 0, 1, 0, 1, 0, 0),
+(3, 'ACCT 250', 6, '113-204', 50, 49, 'Winter 2023', '09:00:00', '10:00:00', 0, 0, 1, 1, 1, 0, 0),
+(5, 'SFWE 101', 4, '113-209', 20, 20, 'Fall 2023', '15:00:00', '16:30:00', 0, 1, 0, 1, 0, 0, 0),
+(6, 'ECE 274A', 4, '11-1M', 12, 8, 'Winter 2023', '15:00:00', '17:00:00', 0, 0, 0, 0, 0, 1, 1),
+(7, 'ACCT 250', 9, '76-232', 24, 23, 'Fall 2023', '09:00:00', '10:30:00', 0, 1, 0, 1, 0, 0, 0),
+(8, 'ACCT 310', 9, '56-104', 30, 30, 'Winter 2023', '09:00:00', '10:00:00', 1, 0, 1, 0, 1, 0, 0),
+(9, 'ACCT 210', 6, '11-206', 30, 30, 'Spring 2024', '15:00:00', '16:00:00', 1, 0, 1, 1, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -359,8 +361,8 @@ ALTER TABLE `courses`
 -- Indexes for table `enrollment`
 --
 ALTER TABLE `enrollment`
-  ADD PRIMARY KEY (`class_id`,`student_id`),
-  ADD UNIQUE KEY `class_id` (`class_id`,`student_id`);
+  ADD PRIMARY KEY (`class_id`,`user_id`),
+  ADD UNIQUE KEY `class_id` (`class_id`,`user_id`);
 
 --
 -- Indexes for table `offerings`

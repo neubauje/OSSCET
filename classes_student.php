@@ -26,15 +26,16 @@
                 <div class="col-md-12">
                     <div class="page-header clearfix">
                         <h3 class="pull-left">Class offerings list</h3>
-    <?php if(isset($_POST['search_classes'])){ ?><form method="POST" action="classes.php"><input type="submit" name="see_all" value="See all"></form> <?php } ?>
+    <?php 
+    include_once 'db.php';
+    if(isset($_POST['search_classes'])){ ?><form method="POST" action="classes.php"><input type="submit" name="see_all" value="See all"></form> <?php } ?>
                     </div>
                     <?php
-                    include_once 'db.php';
 
-         $student_id = $_SESSION['username']; 
+         $user_id = $_SESSION['user_id'];
                     $result = mysqli_query($conn,"SELECT * FROM offerings 
                     INNER JOIN rooms on offerings.room_id=rooms.room_id
-                    INNER JOIN teachers ON offerings.teacher_id=teachers.teacher_id 
+                    INNER JOIN teachers ON offerings.teacher_user_id=teachers.user_id 
                     INNER JOIN courses ON offerings.course_id=courses.course_id 
                     INNER JOIN subject_tracks ON courses.track_id=subject_tracks.track_id 
                     INNER JOIN semesters ON offerings.semester_name=semesters.semester_name ORDER BY `start_date`");
@@ -42,15 +43,15 @@
                     $courses = mysqli_query($conn,"SELECT * from courses");
 if(isset($_POST['enroll'])){
     $selected_class_id = $_POST['class_id'];
-    if($search_enrollments = $conn->prepare('SELECT * from enrollment where class_id=? and student_id=?')){
-        $search_enrollments->execute([$selected_class_id, $student_id]);
+    if($search_enrollments = $conn->prepare('SELECT * from enrollment where class_id=? and user_id=?')){
+        $search_enrollments->execute([$selected_class_id, $user_id]);
         $search_enrollments_result = $search_enrollments->get_result();
         if($search_enrollments_result->num_rows <1)
         {$seats_query = mysqli_query($conn, "SELECT vacancies FROM offerings WHERE `class_id`=$selected_class_id");
             $vacant_seats = mysqli_fetch_assoc($seats_query);
             $seats_number = $vacant_seats['vacancies'];
-            if($seats_number > 0){$sql_query_enroll = "INSERT INTO `enrollment` (`class_id`, `student_id`, `enrollment_status`)
-            VALUES ($selected_class_id, '$student_id', 'a')";
+            if($seats_number > 0){$sql_query_enroll = "INSERT INTO `enrollment` (`class_id`, `user_id`, `enrollment_status`)
+            VALUES ($selected_class_id, '$user_id', 'a')";
             $seats_number = $seats_number - 1;
             $sql_query_seat = "UPDATE `offerings` SET `vacancies` = $seats_number WHERE `class_id` = $selected_class_id";
        
@@ -63,13 +64,26 @@ if(isset($_POST['enroll'])){
             {
                echo "Error: " . $sql . "" . mysqli_error($conn);
             }}
-        else{ echo "Class is full. Wait list functionality under development.";}}
+        else{
+            {$sql_query_enroll = "INSERT INTO `enrollment` (`class_id`, `user_id`, `enrollment_status`)
+                VALUES ($selected_class_id, '$user_id', 'q')";
+                if (mysqli_query($conn, $sql_query_enroll) && mysqli_query($conn, $sql_query_seat)) 
+                {
+                   echo "Successfully joined the waitlist for this class!";?>
+                   <meta http-equiv="refresh" content="0;URL=classes.php" /><?php
+                } 
+                else
+                {
+                   echo "Error: " . $sql . "" . mysqli_error($conn);
+                }}
+        }
+    }
         else{
             $seats_query = mysqli_query($conn, "SELECT vacancies FROM offerings WHERE `class_id`=$selected_class_id");
             $vacant_seats = mysqli_fetch_assoc($seats_query);
             $seats_number = $vacant_seats['vacancies'];
             if($seats_number > 0)
-            {$sql_query_enroll = "UPDATE `enrollment` SET `enrollment_status` = 'a' WHERE `class_id`=$selected_class_id and `student_id` = '$student_id'";
+            {$sql_query_enroll = "UPDATE `enrollment` SET `enrollment_status` = 'a' WHERE `class_id`=$selected_class_id and `user_id` = '$user_id'";
             $seats_number = $seats_number - 1;
             $sql_query_seat = "UPDATE `offerings` SET `vacancies` = $seats_number WHERE `class_id` = $selected_class_id";
        
@@ -82,39 +96,71 @@ if(isset($_POST['enroll'])){
             {
                echo "Error: " . $sql . "" . mysqli_error($conn);
             }}
-        else{ echo "Class is full. Wait list functionality under development.";}
+        else{ {$sql_query_enroll = "INSERT INTO `enrollment` (`class_id`, `user_id`, `enrollment_status`)
+            VALUES ($selected_class_id, '$user_id', 'q')";
+            if (mysqli_query($conn, $sql_query_enroll) && mysqli_query($conn, $sql_query_seat)) 
+            {
+               echo "Successfully joined the waitlist for this class!";?>
+               <meta http-equiv="refresh" content="0;URL=classes.php" /><?php
+            } 
+            else
+            {
+               echo "Error: " . $sql . "" . mysqli_error($conn);
+            }}}
         }
     }
 }
 
 if(isset($_POST['withdraw'])){
     $selected_class_id = $_POST['class_id'];
-    if($search_enrollments = $conn->prepare('SELECT * from enrollment where class_id=? and student_id=?')){
-        $search_enrollments->execute([$selected_class_id, $student_id]);
+    if($search_enrollments = $conn->prepare('SELECT * from enrollment where class_id=? and user_id=?')){
+        $search_enrollments->execute([$selected_class_id, $user_id]);
         $search_enrollments_result = $search_enrollments->get_result();
         if($search_enrollments_result->num_rows > 0)
         {$seats_query = mysqli_query($conn, "SELECT vacancies FROM offerings WHERE `class_id`=$selected_class_id");
             $vacant_seats = mysqli_fetch_assoc($seats_query);
             $seats_number = $vacant_seats['vacancies'];
-            $sql_query_enroll = "UPDATE `enrollment` SET `enrollment_status` = 'w' WHERE `class_id` = $selected_class_id and `student_id` = '$student_id'";
+            if($seats_number < 1){$update_waitlist = TRUE;}
+            else{$update_waitlist = FALSE;}
+            $sql_query_enroll = "UPDATE `enrollment` SET `enrollment_status` = 'w' WHERE `class_id` = $selected_class_id and `user_id` = '$user_id'";
             $seats_number = $seats_number + 1;
             $sql_query_seat = "UPDATE `offerings` SET `vacancies` = $seats_number WHERE `class_id` = $selected_class_id";
        
             if (mysqli_query($conn, $sql_query_enroll) && mysqli_query($conn, $sql_query_seat)) 
             {
-               echo "Successfully withdrawn from class.";?>
-               <meta http-equiv="refresh" content="0;URL=classes.php" /><?php
+               echo "Successfully withdrawn from class.";
             } 
             else
             {
                echo "Error: " . $sql . "" . mysqli_error($conn);
             }
         }
+        if($update_waitlist == TRUE){
+            //Insert messaging system here when ready. Until then, automatic first-in first-out enrollment.
+            if($see_waitlist = $conn->prepare('SELECT first from enrollment where class_id=? and enrollment_status=? ORDER BY enrollment_date asc')){
+                $see_waitlist->execute([$selected_class_id, 'q']);
+                $see_waitlist_result = $see_waitlist->get_result();
+                if($see_waitlist_result->num_rows > 0){
+                    $new_student_user_id = $see_waitlist_result['user_id'];
+                    $sql_waitlist_enroll = "UPDATE `enrollment` SET `enrollment_status` = 'a' WHERE `class_id` = $selected_class_id and `user_id` = '$user_id'";
+                    if(mysqli_query($conn, $sql_waitlist_enroll)){
+                        echo "Waitlist updated.";
+                    }
+                    else
+            {
+               echo "Error: " . $sql . "" . mysqli_error($conn);
+            }
+                }
+            }
+
+        }
     }
+    ?>
+               <meta http-equiv="refresh" content="0;URL=classes.php" /><?php
 }
                    
 if(isset($_POST['search_classes'])){
-    if ($search = $conn->prepare('SELECT class_id, offerings.course_id, offerings.teacher_id, offerings.room_id, 
+    if ($search = $conn->prepare('SELECT class_id, offerings.course_id, offerings.teacher_user_id, offerings.room_id, 
     occupancy, vacancies, offerings.semester_name, start_time, end_time, 
     monday, tuesday, wednesday, thursday, friday, saturday, sunday, 
     room_name, building_name, capacity, building_address, 
@@ -122,7 +168,7 @@ if(isset($_POST['search_classes'])){
     course_name, summary, credits, courses.track_id, default_max_capacity,
     track_name FROM offerings 
     INNER JOIN rooms on offerings.room_id=rooms.room_id
-    INNER JOIN teachers ON offerings.teacher_id=teachers.teacher_id 
+    INNER JOIN teachers ON offerings.teacher_user_id=teachers.user_id 
     INNER JOIN courses ON offerings.course_id=courses.course_id 
     INNER JOIN subject_tracks ON courses.track_id=subject_tracks.track_id 
     INNER JOIN semesters ON offerings.semester_name=semesters.semester_name 
@@ -175,11 +221,13 @@ $search_result = $search->get_result();
                         <td><?php echo $teacher_name; ?></td>
                         <td><?php echo $time_slot; ?></td>
                         <?php $displayed_class_id = $row["class_id"];
-                        if($search_enrollments = $conn->prepare('SELECT * from enrollment where class_id=? and student_id=? and enrollment_status="a"')){
-                            $search_enrollments->execute([$displayed_class_id, $student_id]);
+                        if($search_enrollments = $conn->prepare('SELECT * from enrollment where `class_id`=? and `user_id`=? and enrollment_status="a"')){
+                            $search_enrollments->execute([$displayed_class_id, $user_id]);
                             $search_enrollments_result = $search_enrollments->get_result();
-                        if($search_enrollments_result->num_rows <1){ ?>
+                        if(($search_enrollments_result->num_rows <1) && ($row["vacancies"] > 0)){ ?>
                             <td><form method="POST" action="classes.php"><input type="hidden" name="class_id" value="<?php echo $row['class_id'] ?>"><input type="submit" name="enroll" value="Enroll in this class"></form></td> <?php }
+                        elseif(($search_enrollments_result->num_rows <1) && ($row["vacancies"] < 1)){ ?>
+                            <td><form method="POST" action="classes.php"><input type="hidden" name="class_id" value="<?php echo $row['class_id'] ?>"><input type="submit" name="enroll" value="Join the waiting list this class"></form></td> <?php }
                         else { ?>
                         <td><form method="POST" action="classes.php"><input type="hidden" name="class_id" value="<?php echo $row['class_id'] ?>"><input type="submit" name="withdraw" value="Withdraw from this class"></form></td>
                        <?php }} ?>
@@ -192,7 +240,7 @@ $search_result = $search->get_result();
                      <?php
                     }
                     else{
-                        echo "No result found";
+                        echo "No results found";
                     }
                     ?>
                 </div>

@@ -11,21 +11,18 @@
 </div>
 <c:url var="teacherUrl" value="/teacher"/>
 <?php
-include_once 'db.php';
+include 'db.php';
 
-if (!(isset($_SESSION['prefix']))){$_SESSION['prefix'] = "Mx.";}
-if (!(isset($_SESSION['email']))){$_SESSION['email'] = "student@uagc.edu";}
-if (!(isset($_SESSION['phone']))){$_SESSION['phone'] = "(111)222-3333";}
-if (!(isset($_SESSION['ssn']))){$_SESSION['ssn'] = "111-22-3333";}
-if (!(isset($_SESSION['mailing_address']))){$_SESSION['mailing_address'] = "1401 University of AZ \n Tucson, AZ \n 85719";}
-if (!(isset($_SESSION['bio_summary']))){$_SESSION['bio_summary'] = "This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.";}
+$user_id = $_SESSION['user_id'];
+$password = $_SESSION['password'];
+$role_id = $_SESSION['role_id'];
+$username = $_SESSION['username'];
+$first_name = $_SESSION['first_name'];
+$last_name = $_SESSION['last_name'];
 
 if(isset($_POST['update_teacher'])){
-    $user_id = $_SESSION['user_id'];
-    $role_id = $_SESSION['role_id'];
-    $username = $_POST['username'];
-    $password = $_SESSION['password'];
-     $role_id = $_SESSION['role_id'];
+   
+    $new_username = $_POST['username'];
      $email = $_POST['email'];
      $phone = $_POST['phone'];
      $prefix = $_POST['prefix'];
@@ -35,6 +32,80 @@ if(isset($_POST['update_teacher'])){
      $mailing_address = $_POST['mailing_address'];
      $bio_summary = $_POST['bio_summary'];
 
+     //Check for username change
+     if($_POST['username'] != $_SESSION['username']){    
+        // echo "Username change attempt detected. Checking for availability.";
+        $username_update = TRUE;}
+    else{
+        // echo "No username change detected.";
+        $username_update = FALSE;
+    }
+
+    //Username change attempt
+    if($username_update == TRUE){
+     //Check to make sure the new username isn't already taken   
+    if ($unique_check = $conn->prepare('SELECT * FROM users WHERE username = ?')) {
+        $unique_check->bind_param('s', $new_username);
+        $unique_check->execute();
+        $unique_check->store_result();
+    
+        if ($unique_check->num_rows > 0) { 
+            //Error form for when the new username IS taken
+            ?>
+
+<form action="profile.php" method="post" modelAttribute="teacher">
+
+            <div class="form-group">
+                <label for="username">Username - ERROR: That username is already in use.</label>
+                <input class="form-control" name='username' type="username" value="<?php echo $_SESSION['username'];?>" />
+            </div>
+            <div class="form-group">
+            <label for="prefix">Prefix/Title</label>
+            <input class="form-control" name='prefix' type="text" value="<?php echo $prefix; ?>" />
+        </div>
+        <div class="form-group">
+            <label for="first_name">First name</label>
+            <input class="form-control" name='first_name' type="text" value="<?php echo $first_name; ?>" />
+        </div>
+        <div class="form-group">
+            <label for="last_name">Last name</label>
+            <input class="form-control" name='last_name' type="text" value="<?php echo $last_name; ?>" />
+        </div>
+        <div class="form-group">
+            <label for="email">Email address</label>
+            <input class="form-control" name='email' type="email" value="<?php echo $email; ?>" />
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone number</label>
+            <input class="form-control" name='phone' type="phone" value="<?php echo $phone; ?>" />
+        </div>
+        <div class="form-group">
+            <label for="ssn">Social security number</label>
+            <input class="form-control" name='ssn' type="text" value="<?php echo $ssn; ?>" />
+        </div>
+        <div class="form-group">
+            <label for="mailing_address">Mailing address</label>
+            <input class="form-control" name="mailing_address" type="textarea" value="<?php echo $mailing_address; ?>" />
+        </div>
+        <div class="form-group">
+            <label for="bio_summary">Public summary</label>
+            <input class="form-control" name="bio_summary" type="textarea" value="<?php echo $bio_summary; ?>" />
+        </div>
+        <tr>
+			<td colspan="2"><input type="submit" name='update_teacher' value="Save profile" style="font-size:20px"></td>
+		</tr>
+    </form> 
+    
+    <?php
+        }
+        else{
+            $username = $new_username;
+        }
+    }
+} 
+
+        //If username is being changed, and new username is available, OR when username is not being changed
+
     if ($stmt = $conn->prepare('SELECT * FROM teachers WHERE user_id = ?')) {
         // Bind parameters (s = string, i = int, b = blob, etc), in our case the username is a string so we use "s"
         $stmt->bind_param('i', $user_id);
@@ -42,7 +113,6 @@ if(isset($_POST['update_teacher'])){
         // Store the result so we can check if the account exists in the database.
         $stmt->store_result();
     
-        if ($stmt->num_rows > 0) {
             
             $sql_query = "UPDATE teachers SET `teacher_id` = '$username', 
             `role_id` = $role_id, 
@@ -55,38 +125,16 @@ if(isset($_POST['update_teacher'])){
             `mailing_address` = '$mailing_address',
             `bio_summary` = '$bio_summary'
      WHERE `user_id` = $user_id";
-        }
+    }
 
-     else{
-    
-     $sql_query = "INSERT INTO teachers (`user_id`, 
-     `teacher_id`, 
-     `password`,
-     `role_id`, 
-     `email`, 
-     `phone`, 
-     `prefix`,
-     `first_name`, 
-     `last_name`, 
-     `ssn`, 
-     `mailing_address`,
-     `bio_summary`)
-     VALUES ($user_id, 
-     '$username', 
-     '$password',
-     $role_id, 
-     '$email',
-     '$phone',
-     '$prefix',
-     '$first_name', 
-     '$last_name',
-     '$ssn', 
-     '$mailing_address',
-     '$bio_summary')";
-     }
-     }
+     $update_user = "UPDATE users set
+     `username` = '$username',
+     `first_name` = '$first_name',
+     `last_name` = '$last_name'
+     WHERE `user_id` = $user_id";
+     
 
-     if (mysqli_query($conn, $sql_query)) 
+     if ((mysqli_query($conn, $sql_query)) && (mysqli_query($conn, $update_user)))
      {
         echo "Teacher profile updated!";
         $_SESSION['role_id'] = $role_id;
@@ -103,8 +151,7 @@ if(isset($_POST['update_teacher'])){
      else
      {
         echo "Error: " . $sql . "" . mysqli_error($conn);
-     }
-}
+     }}
 
 if ($stmt = $conn->prepare('SELECT * FROM teachers WHERE user_id = ?')) {
     $stmt->execute([$_SESSION['user_id']]);

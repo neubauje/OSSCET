@@ -52,12 +52,13 @@
                     }
 
          $teacher_id = $_SESSION['username'];
+         $teacher_user_id = $_SESSION['user_id'];
          $result = mysqli_query($conn,"SELECT * FROM offerings
-                    INNER JOIN teachers ON offerings.teacher_id=teachers.teacher_id 
+                    INNER JOIN teachers ON offerings.teacher_user_id=teachers.user_id 
                     INNER JOIN courses ON offerings.course_id=courses.course_id 
                     INNER JOIN rooms ON offerings.room_id=rooms.room_id
                     INNER JOIN semesters ON offerings.semester_name=semesters.semester_name 
-                    WHERE offerings.teacher_id = '$teacher_id'
+                    WHERE offerings.teacher_user_id = '$teacher_user_id'
                     ORDER BY `start_date`");
                     if ($result->num_rows > 0) {
 

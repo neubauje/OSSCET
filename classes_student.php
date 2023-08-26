@@ -41,6 +41,7 @@
                     INNER JOIN semesters ON offerings.semester_name=semesters.semester_name ORDER BY `start_date`");
                     $tracks = mysqli_query($conn,"SELECT * from subject_tracks");
                     $courses = mysqli_query($conn,"SELECT * from courses");
+                    
 if(isset($_POST['enroll'])){
     $selected_class_id = $_POST['class_id'];
     if($search_enrollments = $conn->prepare('SELECT * from enrollment where class_id=? and user_id=?')){
@@ -67,7 +68,7 @@ if(isset($_POST['enroll'])){
         else{
             {$sql_query_enroll = "INSERT INTO `enrollment` (`class_id`, `user_id`, `enrollment_status`)
                 VALUES ($selected_class_id, '$user_id', 'q')";
-                if (mysqli_query($conn, $sql_query_enroll) && mysqli_query($conn, $sql_query_seat)) 
+                if (mysqli_query($conn, $sql_query_enroll))
                 {
                    echo "Successfully joined the waitlist for this class!";?>
                    <meta http-equiv="refresh" content="0;URL=classes.php" /><?php
@@ -142,8 +143,11 @@ if(isset($_POST['withdraw'])){
                 $see_waitlist_result = $see_waitlist->get_result();
                 if($see_waitlist_result->num_rows > 0){
                     $new_student_user_id = $see_waitlist_result['user_id'];
-                    $sql_waitlist_enroll = "UPDATE `enrollment` SET `enrollment_status` = 'a' WHERE `class_id` = $selected_class_id and `user_id` = '$user_id'";
-                    if(mysqli_query($conn, $sql_waitlist_enroll)){
+                    $sql_waitlist_enroll = "UPDATE `enrollment` SET `enrollment_status` = 'a' WHERE `class_id` = $selected_class_id and `user_id` = '$new_student_user_id'";
+                    $message_subject = "Waitlisted class enrolled!";
+                    $message_body = "Congratulations, a seat has opened up in " . $selected_class_id . ". You were next on the waitlist and have been automatically enrolled. You should now see the class in your schedule.";
+                    $sql_waitlist_notif = "INSERT INTO messages (sender_id, recipient_id, message_subject, message_content) VALUES ('0', '$new_student_user_id', '$message_subject', '$message_body')";
+                    if((mysqli_query($conn, $sql_waitlist_enroll)) && (mysqli_query($conn, $sql_waitlist_notif))){
                         echo "Waitlist updated.";
                     }
                     else
@@ -155,6 +159,22 @@ if(isset($_POST['withdraw'])){
 
         }
     }
+    ?>
+               <meta http-equiv="refresh" content="0;URL=classes.php" /><?php
+}
+
+if(isset($_POST['unqueue'])){
+    $selected_class_id = $_POST['class_id'];
+    $queued_student_id = $_SESSION['user_id'];
+    $sql_waitlist_leave = "DELETE from `enrollment` WHERE `class_id` = $selected_class_id and `user_id` = '$queued_student_id'";
+    if(mysqli_query($conn, $sql_waitlist_enroll)){
+                        echo "Waitlist updated.";
+                    }
+                    else
+            {
+               echo "Error: " . $sql . "" . mysqli_error($conn);
+            }
+                
     ?>
                <meta http-equiv="refresh" content="0;URL=classes.php" /><?php
 }
@@ -220,17 +240,36 @@ $search_result = $search->get_result();
                         <td><?php echo $location; ?></td>
                         <td><?php echo $teacher_name; ?></td>
                         <td><?php echo $time_slot; ?></td>
-                        <?php $displayed_class_id = $row["class_id"];
-                        if($search_enrollments = $conn->prepare('SELECT * from enrollment where `class_id`=? and `user_id`=? and enrollment_status="a"')){
+                        <td><?php $displayed_class_id = $row["class_id"];
+                        if($search_enrollments = $conn->prepare('SELECT * from `enrollment` where `class_id`=? and `user_id`=? and `enrollment_status`="a" or `enrollment_status`="q"')){
                             $search_enrollments->execute([$displayed_class_id, $user_id]);
                             $search_enrollments_result = $search_enrollments->get_result();
-                        if(($search_enrollments_result->num_rows <1) && ($row["vacancies"] > 0)){ ?>
-                            <td><form method="POST" action="classes.php"><input type="hidden" name="class_id" value="<?php echo $row['class_id'] ?>"><input type="submit" name="enroll" value="Enroll in this class"></form></td> <?php }
-                        elseif(($search_enrollments_result->num_rows <1) && ($row["vacancies"] < 1)){ ?>
-                            <td><form method="POST" action="classes.php"><input type="hidden" name="class_id" value="<?php echo $row['class_id'] ?>"><input type="submit" name="enroll" value="Join the waiting list this class"></form></td> <?php }
+                            $enroll_result = mysqli_fetch_array($search_enrollments_result);
+                            if($search_enrollments_result->num_rows > 0){$has_enrolled = TRUE;
+                            echo "Student found enrolled in this class.";}
+                            else{$has_enrolled = FALSE;
+                                echo "Student NOT found enrolled in this class.";}
+                            if($row["vacancies"] > 0){$class_has_room = TRUE;
+                                echo "There is room in this class.";}
+                            else{$class_has_room = FALSE;
+                                echo "There is NOT room in this class.";}
+                            if($enroll_result["enrollment_status"] == 'a'){$enrollment_active = TRUE;
+                                echo "Student is already active in this class.";}
+                            else{$enrollment_active = FALSE;
+                                echo "Student is queued for this class.";}
+                        if(($has_enrolled == FALSE) && ($class_has_room == TRUE)){ ?>
+                            <td><form method="POST" action="classes.php"><input type="hidden" name="class_id" value="<?php echo $row['class_id'] ?>"><input type="submit" name="enroll" value="Enroll in this class"></form></td>
+                             <?php }
+                        elseif(($has_enrolled == FALSE) && ($class_has_room == FALSE)){ ?>
+                            <td><form method="POST" action="classes.php"><input type="hidden" name="class_id" value="<?php echo $row['class_id'] ?>"><input type="submit" name="enroll" value="Join the waiting list"></form></td>
+                             <?php }
+                        elseif(($has_enrolled == TRUE) && ($enrollment_active == FALSE)){ ?>
+                        <td><form method="POST" action="classes.php"><input type="hidden" name="class_id" value="<?php echo $row['class_id'] ?>"><input type="submit" name="unqueue" value="Leave the waiting list"></form></td>
+                        <?php }
                         else { ?>
                         <td><form method="POST" action="classes.php"><input type="hidden" name="class_id" value="<?php echo $row['class_id'] ?>"><input type="submit" name="withdraw" value="Withdraw from this class"></form></td>
-                       <?php }} ?>
+                        </td><?php }}
+                        ?>
                     </tr>
                     <?php
                     $i++;

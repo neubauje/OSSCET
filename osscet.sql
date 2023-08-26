@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 25, 2023 at 10:50 PM
+-- Generation Time: Aug 26, 2023 at 08:58 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -91,7 +91,9 @@ INSERT INTO `enrollment` (`class_id`, `user_id`, `enrollment_date`, `enrollment_
 (11, 8, '2023-08-25 19:11:31', 'a', NULL),
 (11, 10, '2023-08-25 19:08:37', 'a', NULL),
 (11, 11, '2023-08-25 19:09:35', 'a', NULL),
-(11, 16, '2023-08-25 20:38:13', 'a', NULL);
+(11, 16, '2023-08-25 20:38:13', 'a', NULL),
+(11, 17, '2023-08-25 21:15:23', 'a', NULL),
+(11, 19, '2023-08-26 16:07:10', 'q', NULL);
 
 -- --------------------------------------------------------
 
@@ -148,7 +150,7 @@ INSERT INTO `offerings` (`class_id`, `course_id`, `teacher_user_id`, `room_id`, 
 (7, 'ACCT 250', 9, '76-232', 24, 23, 'Fall 2023', '09:00:00', '10:30:00', 0, 1, 0, 1, 0, 0, 0),
 (8, 'ACCT 310', 9, '56-104', 30, 30, 'Winter 2023', '09:00:00', '10:00:00', 1, 0, 1, 0, 1, 0, 0),
 (10, 'ACCT 310', 6, '73-319', 28, 28, 'Spring 2024', '14:00:00', '15:30:00', 0, 0, 1, 1, 0, 0, 0),
-(11, 'ECE 274A', 4, '11-1N', 6, 1, 'Fall 2023', '13:00:00', '14:00:00', 1, 1, 1, 1, 0, 0, 0),
+(11, 'ECE 274A', 4, '11-1N', 6, 0, 'Fall 2023', '13:00:00', '14:00:00', 1, 1, 1, 1, 0, 0, 0),
 (12, 'UNIV 301', 15, '000', 300, 300, 'Fall 2023', '00:00:00', '00:00:00', 1, 0, 0, 1, 0, 0, 0);
 
 -- --------------------------------------------------------
@@ -266,6 +268,7 @@ CREATE TABLE `students` (
 
 INSERT INTO `students` (`user_id`, `student_id`, `password`, `role_id`, `email`, `phone`, `first_name`, `last_name`, `dob`, `ssn`, `admission_date`, `graduation_date`, `mailing_address`, `cumulative_gpa`) VALUES
 (17, 'Falanx', '12345', 1, 'student@uagc.edu', '(111)222-3333', 'No', 'Thanks', '2001-01-01', '111-22-3333', '2023-08-25', NULL, '123 Main St, UAGC, AZ, 12345', NULL),
+(19, 'HatterBear', 'Operations', 1, 'hatter@uagc.edu', '(111)222-3333', 'Alex', 'Hutt', '2001-01-01', '111-22-3333', '2023-08-26', NULL, '123 Main St, UAGC, AZ, 12345', NULL),
 (16, 'Jakebunny', '#fastestbun', 1, 'student@uagc.edu', '(111)222-3333', 'Jake', 'Rupert', '2001-01-01', '111-22-3333', '2023-08-25', NULL, '123 Main St, UAGC, AZ, 12345', NULL),
 (11, 'mewbauje', 'testing', 1, 'mewb@uagc.edu', '(111)222-3333', 'Jesse', 'Neub', '0000-00-00', '111-22-3333', '2023-08-24', NULL, '123 Main St, UAGC, AZ, 12345', NULL),
 (8, 'movesLikeJagger', 'MickeyMouse', 2, 'mj@uagc.edu', '(111)222-3333', 'Mick', 'Jagger', '1943-07-26', '111-22-3333', '2023-08-14', NULL, 'Abbey Road. Look it up.', NULL),
@@ -346,7 +349,8 @@ INSERT INTO `teachers` (`user_id`, `teacher_id`, `password`, `role_id`, `email`,
 (6, 'Kashiru', 'Money', 4, 'Kashi@uagc.edu', '(111)222-3333', 'Mr.', 'Steven', 'Monteith', '111-22-3333', '2023-08-13', '1401 University of AZ  Tucson, AZ  85719', NULL, 'Kashi is a very busy guy. He is not a cereal.'),
 (7, 'testdummy', 'test123', 6, 'test@uagc.edu', '(111)222-3333', 'Mx.', 'Can', 'Do', '111-22-3333', '2023-08-13', '1401 University of AZ  Tucson, AZ  85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.'),
 (9, 'BestBetsy', 'HowardHanna', 5, 'betsy@uagc.edu', '(111)222-3333', 'Mrs.', 'Betsy', 'McCloskey', '111-22-3333', '2023-08-20', '1401 University of AZ  Tucson, AZ  85719', NULL, 'Realtor by day, college teacher by night.'),
-(15, 'SnapBat', 'bat', 4, 'teacher@uagc.edu', '(111)222-3333', 'Mr.', 'Snap', 'Bat', '111-22-3333', '2023-08-25', '1401 University of AZTucson, AZ85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.');
+(15, 'SnapBat', 'bat', 4, 'teacher@uagc.edu', '(111)222-3333', 'Mr.', 'Snap', 'Bat', '111-22-3333', '2023-08-25', '1401 University of AZTucson, AZ85719', NULL, 'Snap is a bat who apparently teaches college courses. He&#039;s not aware of this fact.'),
+(18, 'pmtestuser', 'thepassword', 5, 'test@test.com', '(111)222-3333', 'Mx.', 'P', 'M', '111-22-3333', '2023-08-25', '1401 University of AZ, Tucson, AZ, 85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.');
 
 -- --------------------------------------------------------
 
@@ -381,7 +385,9 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `role_id`, `first_name`,
 (11, 'mewbauje', 'testing', 1, 'Jesse', 'Neub'),
 (15, 'SnapBat', 'bat', 4, 'Snap', 'Bat'),
 (16, 'Jakebunny', '#fastestbun', 1, 'Jake', 'Rupert'),
-(17, 'Falanx', '12345', 1, 'No', 'Thanks');
+(17, 'Falanx', '12345', 1, 'No', 'Thanks'),
+(18, 'pmtestuser', 'thepassword', 5, 'P', 'M'),
+(19, 'HatterBear', 'Operations', 1, 'Alex', 'Hutt');
 
 --
 -- Indexes for dumped tables
@@ -484,7 +490,7 @@ ALTER TABLE `subject_tracks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

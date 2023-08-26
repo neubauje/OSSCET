@@ -62,7 +62,7 @@ if ((mysqli_query($conn, $sql_query)) && (mysqli_query($conn, $user_query)))
   $_SESSION['first_name'] = $first_name;
   $_SESSION['last_name'] = $last_name;
   ?>
-  <meta http-equiv="refresh" content="0;URL=index.php" /> 
+  <meta http-equiv="refresh" content="0;URL=profile.php" /> 
   <?php
 } 
 else

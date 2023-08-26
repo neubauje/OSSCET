@@ -1,4 +1,3 @@
-Secure forms against SQL injection, and hopefully make them allowed to have ' in the text fields - process the strings before saving to the database
 when not pre-loaded, build a course-selecting dropdown for the class offerings creator form
 make the waitlist function
 build out the Messages tab to receive system notifications from waitlist function

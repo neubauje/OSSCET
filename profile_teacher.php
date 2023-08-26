@@ -30,7 +30,7 @@ if(isset($_POST['update_teacher'])){
      $last_name = $_POST['last_name'];
      $ssn = $_POST['ssn'];
      $mailing_address = $_POST['mailing_address'];
-     $bio_summary = $_POST['bio_summary'];
+     $bio_summary = htmlspecialchars($_POST['bio_summary']);
 
      //Check for username change
      if($_POST['username'] != $_SESSION['username']){    

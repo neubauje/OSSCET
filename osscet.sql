@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 26, 2023 at 08:58 PM
+-- Generation Time: Aug 27, 2023 at 06:57 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -83,17 +83,20 @@ INSERT INTO `enrollment` (`class_id`, `user_id`, `enrollment_date`, `enrollment_
 (2, 7, '2023-08-24 20:11:44', 'w', NULL),
 (3, 1, '2023-08-24 20:11:26', 'a', NULL),
 (3, 7, '2023-08-24 20:11:50', 'w', NULL),
+(5, 20, '2023-08-27 14:47:26', 'a', NULL),
 (6, 1, '2023-08-24 22:52:29', 'w', NULL),
 (6, 10, '2023-08-24 20:12:48', 'a', NULL),
 (6, 11, '2023-08-24 20:12:17', 'a', NULL),
 (7, 8, '2023-08-24 20:10:44', 'a', NULL),
-(11, 1, '2023-08-24 22:52:40', 'a', NULL),
+(11, 1, '2023-08-27 14:56:53', 'w', NULL),
 (11, 8, '2023-08-25 19:11:31', 'a', NULL),
 (11, 10, '2023-08-25 19:08:37', 'a', NULL),
 (11, 11, '2023-08-25 19:09:35', 'a', NULL),
 (11, 16, '2023-08-25 20:38:13', 'a', NULL),
 (11, 17, '2023-08-25 21:15:23', 'a', NULL),
-(11, 19, '2023-08-26 16:07:10', 'q', NULL);
+(11, 19, '2023-08-27 14:56:53', 'a', NULL),
+(11, 20, '2023-08-27 14:47:27', 'q', NULL),
+(12, 20, '2023-08-27 14:47:22', 'a', NULL);
 
 -- --------------------------------------------------------
 
@@ -112,6 +115,13 @@ CREATE TABLE `messages` (
   `message_subject` varchar(500) NOT NULL DEFAULT '(No subject)',
   `message_content` varchar(5000) NOT NULL DEFAULT 'This is a test message.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `messages`
+--
+
+INSERT INTO `messages` (`message_id`, `is_reply`, `reply_to_id`, `message_timestamp`, `message_status`, `sender_id`, `recipient_id`, `message_subject`, `message_content`) VALUES
+(1, 0, NULL, '2023-08-27 14:56:53', 'u', 0, 19, 'Waitlisted class enrolled!', 'Congratulations, a seat has opened up in Digital Logic. You were next on the waitlist and have been automatically enrolled. You should now see the class in your schedule.');
 
 -- --------------------------------------------------------
 
@@ -145,13 +155,13 @@ CREATE TABLE `offerings` (
 INSERT INTO `offerings` (`class_id`, `course_id`, `teacher_user_id`, `room_id`, `occupancy`, `vacancies`, `semester_name`, `start_time`, `end_time`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`) VALUES
 (1, 'ACCT 200', 6, '76-232', 24, 23, 'Fall 2023', '11:00:00', '12:00:00', 1, 0, 1, 0, 1, 0, 0),
 (3, 'ACCT 250', 6, '113-204', 50, 49, 'Winter 2023', '09:00:00', '10:00:00', 0, 0, 1, 1, 1, 0, 0),
-(5, 'SFWE 101', 4, '113-209', 20, 20, 'Fall 2023', '15:00:00', '16:30:00', 0, 1, 0, 1, 0, 0, 0),
+(5, 'SFWE 101', 4, '113-209', 20, 19, 'Fall 2023', '15:00:00', '16:30:00', 0, 1, 0, 1, 0, 0, 0),
 (6, 'ECE 274A', 4, '11-1M', 12, 9, 'Winter 2023', '15:00:00', '17:00:00', 0, 0, 0, 0, 0, 1, 1),
 (7, 'ACCT 250', 9, '76-232', 24, 23, 'Fall 2023', '09:00:00', '10:30:00', 0, 1, 0, 1, 0, 0, 0),
 (8, 'ACCT 310', 9, '56-104', 30, 30, 'Winter 2023', '09:00:00', '10:00:00', 1, 0, 1, 0, 1, 0, 0),
 (10, 'ACCT 310', 6, '73-319', 28, 28, 'Spring 2024', '14:00:00', '15:30:00', 0, 0, 1, 1, 0, 0, 0),
 (11, 'ECE 274A', 4, '11-1N', 6, 0, 'Fall 2023', '13:00:00', '14:00:00', 1, 1, 1, 1, 0, 0, 0),
-(12, 'UNIV 301', 15, '000', 300, 300, 'Fall 2023', '00:00:00', '00:00:00', 1, 0, 0, 1, 0, 0, 0);
+(12, 'UNIV 301', 15, '000', 300, 299, 'Fall 2023', '00:00:00', '00:00:00', 1, 0, 0, 1, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -270,6 +280,7 @@ INSERT INTO `students` (`user_id`, `student_id`, `password`, `role_id`, `email`,
 (17, 'Falanx', '12345', 1, 'student@uagc.edu', '(111)222-3333', 'No', 'Thanks', '2001-01-01', '111-22-3333', '2023-08-25', NULL, '123 Main St, UAGC, AZ, 12345', NULL),
 (19, 'HatterBear', 'Operations', 1, 'hatter@uagc.edu', '(111)222-3333', 'Alex', 'Hutt', '2001-01-01', '111-22-3333', '2023-08-26', NULL, '123 Main St, UAGC, AZ, 12345', NULL),
 (16, 'Jakebunny', '#fastestbun', 1, 'student@uagc.edu', '(111)222-3333', 'Jake', 'Rupert', '2001-01-01', '111-22-3333', '2023-08-25', NULL, '123 Main St, UAGC, AZ, 12345', NULL),
+(20, 'JasperFen', 'fennec', 1, 'jasper@uagc.edu', '(111)222-3333', 'Jasper', 'Fenfen', '2001-01-01', '111-22-3333', '2023-08-27', NULL, '123 Main St, UAGC, AZ, 12345', NULL),
 (11, 'mewbauje', 'testing', 1, 'mewb@uagc.edu', '(111)222-3333', 'Jesse', 'Neub', '0000-00-00', '111-22-3333', '2023-08-24', NULL, '123 Main St, UAGC, AZ, 12345', NULL),
 (8, 'movesLikeJagger', 'MickeyMouse', 2, 'mj@uagc.edu', '(111)222-3333', 'Mick', 'Jagger', '1943-07-26', '111-22-3333', '2023-08-14', NULL, 'Abbey Road. Look it up.', NULL),
 (1, 'neubauje', 'password', 1, 'neubauje@gmail.com', '740-407-8022', 'Jesse', 'Neubauer', '1990-06-29', '111-22-3333', '2023-08-13', NULL, '123 Main St, UAGC, AZ, 12345', NULL),
@@ -387,7 +398,8 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `role_id`, `first_name`,
 (16, 'Jakebunny', '#fastestbun', 1, 'Jake', 'Rupert'),
 (17, 'Falanx', '12345', 1, 'No', 'Thanks'),
 (18, 'pmtestuser', 'thepassword', 5, 'P', 'M'),
-(19, 'HatterBear', 'Operations', 1, 'Alex', 'Hutt');
+(19, 'HatterBear', 'Operations', 1, 'Alex', 'Hutt'),
+(20, 'JasperFen', 'fennec', 1, 'Jasper', 'Fenfen');
 
 --
 -- Indexes for dumped tables
@@ -472,7 +484,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `offerings`
@@ -490,7 +502,7 @@ ALTER TABLE `subject_tracks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

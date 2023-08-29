@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 29, 2023 at 04:02 AM
+-- Generation Time: Aug 29, 2023 at 05:35 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -96,7 +96,8 @@ INSERT INTO `enrollment` (`class_id`, `user_id`, `enrollment_date`, `enrollment_
 (11, 17, '2023-08-25 21:15:23', 'a', NULL),
 (11, 19, '2023-08-27 14:56:53', 'a', NULL),
 (11, 20, '2023-08-27 14:47:27', 'q', NULL),
-(12, 20, '2023-08-27 14:47:22', 'a', NULL);
+(12, 20, '2023-08-27 14:47:22', 'a', NULL),
+(15, 1, '2023-08-29 03:26:23', 'a', NULL);
 
 -- --------------------------------------------------------
 
@@ -161,7 +162,10 @@ INSERT INTO `offerings` (`class_id`, `course_id`, `teacher_user_id`, `room_id`, 
 (8, 'ACCT 310', 9, '56-104', 30, 30, 'Winter 2023', '09:00:00', '10:00:00', 1, 0, 1, 0, 1, 0, 0),
 (10, 'ACCT 310', 6, '73-319', 28, 28, 'Spring 2024', '14:00:00', '15:30:00', 0, 0, 1, 1, 0, 0, 0),
 (11, 'ECE 274A', 4, '11-1N', 6, 0, 'Fall 2023', '13:00:00', '14:00:00', 1, 1, 1, 1, 0, 0, 0),
-(12, 'UNIV 301', 15, '000', 300, 299, 'Fall 2023', '00:00:00', '00:00:00', 1, 0, 0, 1, 0, 0, 0);
+(12, 'UNIV 301', 15, '000', 300, 299, 'Fall 2023', '00:00:00', '00:00:00', 1, 0, 0, 1, 0, 0, 0),
+(13, 'LAR 440', 21, '76-232', 24, 24, 'Spring 2024', '13:00:00', '14:00:00', 0, 0, 0, 1, 1, 1, 0),
+(14, 'HIST 207', 21, '000', 40, 40, 'Summer 2024', '00:00:00', '00:00:00', 0, 0, 0, 0, 0, 1, 1),
+(15, 'OSCM 373', 21, '56-104', 30, 29, 'Fall 2024', '09:00:00', '10:00:00', 1, 1, 1, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -361,7 +365,8 @@ INSERT INTO `teachers` (`user_id`, `teacher_id`, `password`, `role_id`, `email`,
 (7, 'testdummy', 'test123', 6, 'test@uagc.edu', '(111)222-3333', 'Mx.', 'Can', 'Do', '111-22-3333', '2023-08-13', '1401 University of AZ  Tucson, AZ  85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.'),
 (9, 'BestBetsy', 'HowardHanna', 5, 'betsy@uagc.edu', '(111)222-3333', 'Mrs.', 'Betsy', 'McCloskey', '111-22-3333', '2023-08-20', '1401 University of AZ  Tucson, AZ  85719', NULL, 'Realtor by day, college teacher by night.'),
 (15, 'SnapBat', 'bat', 4, 'teacher@uagc.edu', '(111)222-3333', 'Mr.', 'Snap', 'Bat', '111-22-3333', '2023-08-25', '1401 University of AZTucson, AZ85719', NULL, 'Snap is a bat who apparently teaches college courses. He&#039;s not aware of this fact.'),
-(18, 'pmtestuser', 'thepassword', 5, 'test@test.com', '(111)222-3333', 'Mx.', 'P', 'M', '111-22-3333', '2023-08-25', '1401 University of AZ, Tucson, AZ, 85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.');
+(18, 'pmtestuser', 'thepassword', 5, 'test@test.com', '(111)222-3333', 'Mx.', 'P', 'M', '111-22-3333', '2023-08-25', '1401 University of AZ, Tucson, AZ, 85719', NULL, 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.'),
+(21, 'Nikki', 'cat', 4, 'nikki@uagc.edu', '(111)222-3456', 'Mrs.', 'Brittany', 'Nelson', '111-22-3456', '2023-08-28', 'Somewhere in Wisconsin', NULL, 'Nikki is an awesome cat. She is the Chair of iFC.');
 
 -- --------------------------------------------------------
 
@@ -399,7 +404,8 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `role_id`, `first_name`,
 (17, 'Falanx', '12345', 1, 'No', 'Thanks'),
 (18, 'pmtestuser', 'thepassword', 5, 'P', 'M'),
 (19, 'HatterBear', 'Operations', 1, 'Alex', 'Hutt'),
-(20, 'JasperFen', 'fennec', 1, 'Jasper', 'Fenfen');
+(20, 'JasperFen', 'fennec', 1, 'Jasper', 'Fenfen'),
+(21, 'Nikki', 'cat', 4, 'Brittany', 'Nelson');
 
 --
 -- Indexes for dumped tables
@@ -410,71 +416,88 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `role_id`, `first_name`,
 --
 ALTER TABLE `courses`
   ADD PRIMARY KEY (`course_id`),
-  ADD UNIQUE KEY `course_id` (`course_id`);
+  ADD UNIQUE KEY `course_id` (`course_id`),
+  ADD UNIQUE KEY `course_id_2` (`course_id`),
+  ADD KEY `track_id` (`track_id`),
+  ADD KEY `course_name` (`course_name`);
 
 --
 -- Indexes for table `enrollment`
 --
 ALTER TABLE `enrollment`
-  ADD PRIMARY KEY (`class_id`,`user_id`),
-  ADD UNIQUE KEY `class_id` (`class_id`,`user_id`);
+  ADD PRIMARY KEY (`class_id`,`user_id`);
 
 --
 -- Indexes for table `messages`
 --
 ALTER TABLE `messages`
-  ADD PRIMARY KEY (`message_id`);
+  ADD PRIMARY KEY (`message_id`),
+  ADD KEY `message_id` (`message_id`),
+  ADD KEY `reply_to_id` (`reply_to_id`,`sender_id`,`recipient_id`);
 
 --
 -- Indexes for table `offerings`
 --
 ALTER TABLE `offerings`
-  ADD PRIMARY KEY (`class_id`);
+  ADD PRIMARY KEY (`class_id`),
+  ADD KEY `class_id` (`class_id`),
+  ADD KEY `course_id` (`course_id`,`teacher_user_id`,`room_id`,`semester_name`),
+  ADD KEY `room_id` (`room_id`);
 
 --
 -- Indexes for table `roles`
 --
 ALTER TABLE `roles`
-  ADD PRIMARY KEY (`role_id`);
+  ADD PRIMARY KEY (`role_id`),
+  ADD KEY `role_id` (`role_id`),
+  ADD KEY `role_id_2` (`role_id`);
 
 --
 -- Indexes for table `rooms`
 --
 ALTER TABLE `rooms`
-  ADD PRIMARY KEY (`room_id`);
+  ADD PRIMARY KEY (`room_id`),
+  ADD KEY `room_id` (`room_id`,`room_name`);
 
 --
 -- Indexes for table `semesters`
 --
 ALTER TABLE `semesters`
   ADD PRIMARY KEY (`semester_name`),
-  ADD UNIQUE KEY `semester_name` (`semester_name`);
+  ADD UNIQUE KEY `semester_name` (`semester_name`),
+  ADD KEY `semester_name_2` (`semester_name`);
 
 --
 -- Indexes for table `students`
 --
 ALTER TABLE `students`
-  ADD PRIMARY KEY (`student_id`);
+  ADD PRIMARY KEY (`student_id`),
+  ADD KEY `user_id` (`user_id`,`student_id`);
 
 --
 -- Indexes for table `subject_tracks`
 --
 ALTER TABLE `subject_tracks`
   ADD PRIMARY KEY (`track_id`),
-  ADD UNIQUE KEY `track_id` (`track_id`);
+  ADD UNIQUE KEY `track_id` (`track_id`),
+  ADD KEY `track_id_2` (`track_id`);
 
 --
 -- Indexes for table `teachers`
 --
 ALTER TABLE `teachers`
-  ADD PRIMARY KEY (`user_id`) USING BTREE;
+  ADD PRIMARY KEY (`user_id`) USING BTREE,
+  ADD KEY `user_id` (`user_id`,`teacher_id`);
 
 --
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`),
-  ADD UNIQUE KEY `username` (`username`);
+  ADD UNIQUE KEY `username` (`username`),
+  ADD KEY `user_id` (`user_id`,`username`),
+  ADD KEY `role_id` (`role_id`),
+  ADD KEY `first_name` (`first_name`,`last_name`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -490,7 +513,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `offerings`
 --
 ALTER TABLE `offerings`
-  MODIFY `class_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `class_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `subject_tracks`
@@ -502,7 +525,35 @@ ALTER TABLE `subject_tracks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `courses`
+--
+ALTER TABLE `courses`
+  ADD CONSTRAINT `courses_ibfk_1` FOREIGN KEY (`track_id`) REFERENCES `subject_tracks` (`track_id`);
+
+--
+-- Constraints for table `offerings`
+--
+ALTER TABLE `offerings`
+  ADD CONSTRAINT `offerings_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`room_id`);
+
+--
+-- Constraints for table `students`
+--
+ALTER TABLE `students`
+  ADD CONSTRAINT `students_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Constraints for table `teachers`
+--
+ALTER TABLE `teachers`
+  ADD CONSTRAINT `teachers_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

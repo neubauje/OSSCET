@@ -78,8 +78,10 @@ if(isset($_POST['login'])){
                            $_SESSION['salary'] = $salary;
                        }
                    };
+                   
                }
-
+               ?>
+               <meta http-equiv="refresh" content="0;URL=index.php" /> <?php
            } else {
                // Incorrect password
                echo "Incorrect credentials! (Password does not match.)";
@@ -89,8 +91,7 @@ if(isset($_POST['login'])){
            echo 'Incorrect credentials! (Username does not exist.)';
        }
    }
-?>
-    <meta http-equiv="refresh" content="0;URL=index.php" /> <?php
+
 } 
 
 ?>

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 27, 2023 at 06:57 PM
--- Server version: 10.4.24-MariaDB
--- PHP Version: 8.1.6
+-- Generation Time: Aug 29, 2023 at 04:02 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -35,7 +35,7 @@ CREATE TABLE `courses` (
   `track_id` int(11) NOT NULL,
   `prerequesites` tinyint(1) DEFAULT NULL,
   `default_max_capacity` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `courses`
@@ -69,7 +69,7 @@ CREATE TABLE `enrollment` (
   `enrollment_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `enrollment_status` char(1) DEFAULT NULL,
   `grade` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `enrollment`
@@ -84,11 +84,11 @@ INSERT INTO `enrollment` (`class_id`, `user_id`, `enrollment_date`, `enrollment_
 (3, 1, '2023-08-24 20:11:26', 'a', NULL),
 (3, 7, '2023-08-24 20:11:50', 'w', NULL),
 (5, 20, '2023-08-27 14:47:26', 'a', NULL),
-(6, 1, '2023-08-24 22:52:29', 'w', NULL),
+(6, 1, '2023-08-29 01:11:52', 'a', NULL),
 (6, 10, '2023-08-24 20:12:48', 'a', NULL),
 (6, 11, '2023-08-24 20:12:17', 'a', NULL),
 (7, 8, '2023-08-24 20:10:44', 'a', NULL),
-(11, 1, '2023-08-27 14:56:53', 'w', NULL),
+(11, 1, '2023-08-29 01:07:37', 'q', NULL),
 (11, 8, '2023-08-25 19:11:31', 'a', NULL),
 (11, 10, '2023-08-25 19:08:37', 'a', NULL),
 (11, 11, '2023-08-25 19:09:35', 'a', NULL),
@@ -114,14 +114,14 @@ CREATE TABLE `messages` (
   `recipient_id` int(11) NOT NULL,
   `message_subject` varchar(500) NOT NULL DEFAULT '(No subject)',
   `message_content` varchar(5000) NOT NULL DEFAULT 'This is a test message.'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `messages`
 --
 
 INSERT INTO `messages` (`message_id`, `is_reply`, `reply_to_id`, `message_timestamp`, `message_status`, `sender_id`, `recipient_id`, `message_subject`, `message_content`) VALUES
-(1, 0, NULL, '2023-08-27 14:56:53', 'u', 0, 19, 'Waitlisted class enrolled!', 'Congratulations, a seat has opened up in Digital Logic. You were next on the waitlist and have been automatically enrolled. You should now see the class in your schedule.');
+(1, 0, NULL, '2023-08-27 14:56:53', 'r', 0, 19, 'Waitlisted class enrolled!', 'Congratulations, a seat has opened up in Digital Logic. You were next on the waitlist and have been automatically enrolled. You should now see the class in your schedule.');
 
 -- --------------------------------------------------------
 
@@ -146,7 +146,7 @@ CREATE TABLE `offerings` (
   `friday` tinyint(1) DEFAULT NULL,
   `saturday` tinyint(1) DEFAULT NULL,
   `sunday` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `offerings`
@@ -172,7 +172,7 @@ INSERT INTO `offerings` (`class_id`, `course_id`, `teacher_user_id`, `room_id`, 
 CREATE TABLE `roles` (
   `role_id` int(11) NOT NULL,
   `role_name` varchar(45) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `roles`
@@ -203,7 +203,7 @@ CREATE TABLE `rooms` (
   `capacity` int(11) NOT NULL,
   `ada_accessible` tinyint(1) DEFAULT NULL,
   `building_address` varchar(200) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `rooms`
@@ -236,7 +236,7 @@ CREATE TABLE `semesters` (
   `semester_name` varchar(50) NOT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `semesters`
@@ -270,7 +270,7 @@ CREATE TABLE `students` (
   `graduation_date` int(11) DEFAULT NULL,
   `mailing_address` varchar(500) NOT NULL DEFAULT '123 Main St, UAGC, AZ, 12345',
   `cumulative_gpa` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `students`
@@ -295,7 +295,7 @@ INSERT INTO `students` (`user_id`, `student_id`, `password`, `role_id`, `email`,
 CREATE TABLE `subject_tracks` (
   `track_id` int(11) NOT NULL,
   `track_name` varchar(45) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `subject_tracks`
@@ -348,7 +348,7 @@ CREATE TABLE `teachers` (
   `mailing_address` varchar(500) DEFAULT '1401 University of AZ, Tucson, AZ, 85719',
   `salary` double DEFAULT NULL,
   `bio_summary` varchar(1000) DEFAULT 'This is a placeholder for where your biography/summary should go. It will be shown to students, describing you. Please put it in 3rd person and make sure to include your pronouns.'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `teachers`
@@ -376,7 +376,7 @@ CREATE TABLE `users` (
   `role_id` int(11) NOT NULL DEFAULT 3,
   `first_name` varchar(20) DEFAULT NULL,
   `last_name` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
